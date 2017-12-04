@@ -40,5 +40,5 @@ var module = require ('module_ name') ;
 
 在 Node 中，**文件和模块是一一对应的**，这在下面的例子中将会看到。下面从创建文件 circle.js 开始，该文件只是导出了Circle 类的构造函数：
 
-[import:"tag",option0:"value0"](./circle.js)
+[include](/loadModule/circle.js)
 
