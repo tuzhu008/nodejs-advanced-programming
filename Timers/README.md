@@ -169,7 +169,7 @@ stream.on('data', function (data) {
 
 ## 使用 `setTimeout` 代替 `setInterval` 强制函数串行执行
 
-假如希望函数 my\_async\_function 重复执行一些 I/O 操作（比如解析日志文件），可以使用 `setInterval ` 函数，如下所示：
+假如希望函数 my\_async\_function 重复执行一些 I/O 操作（比如解析日志文件），可以使用 `setInterval` 函数，如下所示：
 
 ```js
 var interval = 1000;
@@ -187,14 +187,25 @@ setInterval(function () {
 ```js
 var interval = 1000; // 1s
 (function schedule () {
-    setTimeout(function () {
+    setTimeout(function do_it () {
         my_sync_function(function () {
             console.log('async is done');
             schedule();
         });
     }, interval);
 }());
+
 ```
+
+在上面的代码中， 声明了一个函数 schedule ， 并且在声明后立刻调用它， schedule 函数安排 do\_it  函数在1秒（选定的interval值）后执行。1秒钟过后， 第5行的 my\_async \_ function 函数会被调用，当它执行完毕后，会调用作为其参数的匿名回调函数，而这个回调函数又会再次安排 do\_it 函数在1秒钟后重新执行， 这样，就会重新启动循环过程。
+
+## 本章小结
+
+可以使用 `setTimeout()` 函数预先制定函数的执行计划， 并可用 `clearTimeout()` 函数取消执行计划。还可以使用 `setlnterval()` 让某个函数周期性地重复执行， 相应的， 可以使用 `clearInterval()` 取消这个重复执行计划。
+
+如果由于执行了一个处理器敏感的操作而堵塞了事件循环，那些原计划应该被执行的函数就会被推迟执行，甚至永远无法执行。所以不要在事件循环内使用 CPU 敏感的操作。另外，可以使用 `process.nextTick()` 将函数的执行延迟到事件循环的下一轮。
+
+I/O 操作和 `setlnterval()`  一起使用时， 无法保证在任意时刻只有一个挂起的调用，但可以使用递归函数和 `setTimeout()` 函数来规避这个潜在的问题。
 
 
 
