@@ -1,4 +1,4 @@
-function Circle(x, y, r) {
+function Circle (x, y, r) {
     function r_squared() {
         return Math.pow(r, 2);
     }
@@ -7,8 +7,8 @@ function Circle(x, y, r) {
         return Math.PI * r_squared()
     }
     
-    return {area: area} ;
+    return { area: area };
     
 }
 
-module.exports = Circle;
+module.exports = Circle;

@@ -45,9 +45,9 @@
       }
     },
     "include-codeblock": {
-      "template": "ace",
+      "template": "acefull",
       "unindent": true,
-      "theme": "monokai"
+      "theme": "tomorrow"
     },
     "favicon": {
         "shortcut": "assets/images/favicon.ico",
@@ -73,9 +73,6 @@
     },
     "sectionx": {
       "tag": "b"
-    },
-    "include-codeblock": {
-      "template": "ace"
     }
   }
 }
