@@ -9,10 +9,13 @@ p {
 ul {
     padding-left: 4em !important;
 }
-.summary ul {
+ul.summary {
     padding-left: 0 !important;
 
 }
 ul p {
+    text-indent: 0;
+}
+blockquote:first-child {
     text-indent: 0;
 }

@@ -21,7 +21,7 @@
 以下面的代码为例，看看在典型的阻塞式 I/O 编程中，如何实现对数据库的查询：
 
 ```js
-result = query('SELECT * FROM posts WHERE id= l');
+result = query('SELECT * FROM posts WHERE id= 1');
 do_something_with (result);
 ```
 
@@ -33,7 +33,8 @@ do_something_with (result);
 query_finished = function (result) {
     do_something_with(result);
 };
-query ('SELECT * FROM posts WHERE id = 1', query_finished);
+
+query ('SELECT * FROM posts WHERE id = 1', query_finished);
 ```
 
 此处首先定义了在查询完成之后将会发生的处理过程，并且将这个过程存储在一个名为 `query_finished` 的函数当中，然后将函数名作为查询的一个参数。这样，当查询完成之后将会调用 `query_finished` 函数，而不仅仅只是返回查询结果。
@@ -52,17 +53,13 @@ query_finished = function (result) {
 
 > 「众所周知的秘密」
 >
->
->
 > 在相当一段时间内， 系统编程领域已经知道事件驱动编程是创建处理众多并发连接的服务的最佳方法。由于不用保存很多上下文， 因此节省了大量内存；又因为也没有那么多上下文切换， 又节省了大量执行时间。
 >
 > 这种理念已经渗透进其他平台和领域， 例如 Ruby 的 _Event Machine_、Perl 的 _AnyEvent_ 和 Python 的 _Twisted_ 都是一些知名的事件循环实现，当然还包括其他一些语言。
 >
 > 使用上述框架之一实现应用程序时需要该框架指定的编程语言和库， 例如使用 Event Machine 时，应该避免使用同步库，为了利用非阻塞模式的优势，你被限制使用专门为 Event Machine 构建的异步库。如果使用了阻塞库（例如Ruby的大多数标准库）， 那么所搭建的服务器无法进行理想的伸缩， 因为事件循环经常会被阻塞， 从而妨碍处理 I/O 事件。从诞生的第一天开始，Node就是作为一个非阻塞 I/O 服务器平台而设计的， 所以基于它构建的所有应用程序都会是非阻塞的。因为JavaScript非常小， 并且没有为 I/O 操作增加额外的东西\(JavaScript没有标准 I/O 库）， 所以Node的构建基础非常纯净。
 
-
-
-## Node 和JavaScript 如何简化异步应用程序的编写 
+## Node 和JavaScript 如何简化异步应用程序的编写
 
 Node 的作者 RyanDahl 是从构建一个 C 语言平台开始他的项目的，但是这样一来，维护函数调用之间的上下文就十分复杂， 导致编写的代码晦涩难懂。然后他转向了 Lua，但是 Lua 已经有了一些阻塞式 I/O 库，将阻塞式和非阻塞式混合起来，会让开发者产生混淆，使他们难以构建伸缩性良好的应用程序， 因此 Lua 也不是一个理想的选择。
 
