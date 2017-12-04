@@ -25,7 +25,8 @@
 ```js
 var fs = require("fs");
 fs.readFile('/etc/passwd', function (err, fileContent) {
-    if {err) {
+
+if {err) {
         throw err;
     }
     console.log('file content', fileContent.toString());
@@ -42,15 +43,5 @@ fs.readFile('/etc/passwd', function (err, fileContent) {
 
 在使用事件发生器模式时，会涉及两个或更多的对象，这些对象包括一个或者多个事件监听器。
 
-  
-p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 40.0px Helvetica; color: \#5c5c5c}  
-p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 40.0px Helvetica; color: \#5e5e5e}  
-p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 40.0px Helvetica; color: \#626262}  
-span.s1 {font: 26.5px Helvetica}  
-span.s2 {font: 23.0px Helvetica}  
-
-
 顾名思义， 事件发射器就是可以发射事件的对象，而事件监听器则是绑定到事件发射器上的代码，负责监听特定类型的事件， 如下面的例子所示：
-
-
 
