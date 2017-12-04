@@ -25,8 +25,7 @@
 ```js
 var fs = require("fs");
 fs.readFile('/etc/passwd', function (err, fileContent) {
-
-if {err) {
+    if {err) {
         throw err;
     }
     console.log('file content', fileContent.toString());
@@ -48,15 +47,12 @@ if {err) {
 ```js
 var req = http.request(options, function (response) {
     response.on("data", function (data) {
-
-console.log("some data from the response ", data);
+        console.log("some data from the response ", data);
     });
 
-   response.on("end", function () {
-
-console.log("response ended");
-
-});
+    response.on("end", function () {
+       console.log("response ended");
+    });
    req.end();
 }
 ```
@@ -203,7 +199,7 @@ readStream.on('data', function (data) {
 
 ```js
 function  receiveData(data) {
- console.log("got data from file read stream: %j", data);
+    console.log("got data from file read stream: %j", data);
 }
 readStream.on("data", receiveData);
 // ...
@@ -222,7 +218,7 @@ readStream.removeListener("data", receiveData);
 
 ```js
 function receiveData (data) {
- console.log("got data from file read stream: %j", data);
+    console.log("got data from file read stream: %j", data);
 }
 readStream.once("data", receiveData);
 ```
@@ -234,11 +230,11 @@ readStream.once("data", receiveData);
 ```js
 var EventEmitter = require("events").EventEmitter;
 EventEmitter.prototype.once = function (type, callback) {
- var that = this;
- this.on(type, function listener() {
-  that.removeListener(type, listener);
-  callback.apply(that, arguments);
- });
+    var that = this;
+    this.on(type, function listener () {
+        that.removeListener(type, listener);
+        callback.apply(that, arguments);
+    });
 };
 ```
 
