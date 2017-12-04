@@ -119,5 +119,82 @@ process.nextTick(function () {
 });
 ```
 
+> **\[info\] 注意：**
+>
+> process 对象是 Node 中为数不多的全局对象之一。
+
+## 阻塞事件循环
+
+Node 和 JavaScript 的运行时采用的是**单线程事件循环**。每次循环，运行时通过调用相关回调函数来处理队列内的下个事件。当事件处理完毕，事件循环获取处理的结果并开始处理下个事件，如此反复，直到事件队列为空。如果其中某个回调函数占用了很长时间，事件循环在此期间就不能处理其他挂起的事件，这会让应用程序或服务变得非常缓慢。
+
+在处理事件时， 如果使用了内存敏感或者处理器敏感的函数， 会导致事件循环变得缓慢，而且造成大量事件堆积，不能得到及时处理，甚至堵塞队列。
+
+下面是一个阻塞事件循环的例子：
+
+```js
+process.nextTick(function () {
+    var a = 0;
+    while (true) {
+        a ++;
+    }
+});
+
+process.nextTick(function () {
+    console.log('next tick');
+});
+
+setTimeout(function () {
+    console.log('time out');
+}, 1000);
+```
+
+在上面的例子中，nextTick2 和 timeout 函数无论等待多久都没机会运行， 因为事件循环被 nextTick 函数里的无限循环阻塞了，即使 timeout 函数被计划在1秒钟后执行也不可能。
+
+在使用 setTimeout 时，回调函数会被添加到执行计划队列，而在这个例子里它们甚至不会被添加到队列。虽然这是一个极端的例子，但是可以看到，执行一个处理器敏感的任务时，可能会堵塞或者拖慢事件循环。
+
+## 退出事件循环
+
+通过使用 `process.nextTick`， 可以将一个非关键性的任务推迟到事件循环的下一轮再执行，这样可以释放事件循环，让它可以继续执行其他挂起的事件。
+
+查看下面的例子，如果需要删除一个之前创建的临时文件， 但又不想在对客户端做出响应之前进行该操作， 就可以延迟删除操作， 如下所示：
+
+```js
+stream.on('data', function (data) {
+    stream.end('my response');
+    process.nextTick(function () {
+        fs.unlink('/path/to/file/');
+    });
+});
+```
+
+## 使用 `setTimeout` 代替 `setInterval` 强制函数串行执行
+
+假如希望函数 my\_async\_function 重复执行一些 I/O 操作（比如解析日志文件），可以使用 `setInterval ` 函数，如下所示：
+
+```js
+var interval = 1000;
+setInterval(function () {
+    my_sync_function(function () {
+        console.log('my_async_function finished');
+    });
+}, interval);
+```
+
+不过， 你必须确保这些函数不会同时执行， 但是使用 `setlnterval` 就无法保证这一点。假如 my\_async\_function 函数的执行时间比 interval 变量多了1毫秒，它们就会被同时执行，而不是按顺序串行执行。
+
+因此， 需要强制指定 my\_async \_function 函数执行结束与下个 my\_async function 函数开始执行之间的时间间隔， 这个时间间隔应该由 interval 指定，可以这样做：
+
+```js
+var interval = 1000; // 1s
+(function schedule () {
+    setTimeout(function () {
+        my_sync_function(function () {
+            console.log('async is done');
+            schedule();
+        });
+    }, interval);
+}());
+```
+
 
 
