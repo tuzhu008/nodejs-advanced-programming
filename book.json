@@ -1,7 +1,7 @@
 {
-  "title" : "webpack中文",
+  "title" : "Node.js高级编程",
   "author" : "tuzhu008",
-  "description" : "webpack学习资料和过程记录",
+  "description" : "Node.js高级编程手工修正版",
   "language" : "zh-hans",
   "root": ".",
   "styles": {
