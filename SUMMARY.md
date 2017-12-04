@@ -4,7 +4,7 @@
 
 ### 第 Ⅰ 部分 概述和安装
 
-* 第1章： 安装Node
+* [第1章： 安装Node](installation/README.md)
 
 * [第2章： Node简介](intro.md)
 
