@@ -113,11 +113,11 @@ for (var i = 0; i < buf.length; i++) {
 ```js
 var buffer = new Buffer("This is the content of my buffer");
 var smallerBuffer = buffer.slice(8, 19);
-console.log(smallerBuffer.toString()); // -> the content"
+
+console.log(smallerBuffer.toString()); // -> the content"
 ```
 
-注意，在切分缓冲区时并没有分配新的内存，也没有进行任何复制，新缓冲区还是使用父缓冲区的内存区域，只不过引用了父缓冲区不同的起始位置和/或结束位置。这一点蕴含以下几方面的意思。  
-
+注意，在切分缓冲区时并没有分配新的内存，也没有进行任何复制，新缓冲区还是使用父缓冲区的内存区域，只不过引用了父缓冲区不同的起始位置和/或结束位置。这一点蕴含以下几方面的意思。
 
 首先，如果程序修改了父缓冲区， 并且修改只要影响到子缓冲区范围内的数据，那么子缓冲区也会修改。因为父缓冲区和子缓缓冲区是不同的 JavaScript 对象，所以很容易忽略这个问题，导致一些错误。
 
@@ -138,8 +138,8 @@ var targetStart = 0;
 var sourceStart = 8;
 var sourceEnd = 19;
 bufferl.copy(buffer2, targetStart, sourceStart, sourceEnd);
-console.log(buffer2.toString()) // -> "the content"
 
+console.log(buffer2.toString()) // -> "the content"
 ```
 
 在上面的代码中，将源缓冲区的第8到第19个位置上的数据复制到目标缓冲区的起始位置。
@@ -162,7 +162,7 @@ var b64Str = buf.toString("base64");
 
 ```js
 var utf8String = 'my string';
-var buf = new Buffer(utf8String); // 将缓冲区作为桥梁
+var buf = new Buffer(utf8String); // 将缓冲区作为桥梁
 var base64String = buf.toString('base64');
 ```
 
@@ -173,6 +173,4 @@ var base64String = buf.toString('base64');
 Node 中的 Buffer 类对访问连续内存块的操作进行了封装，可以处理内存中的数据以及切分缓冲区，还可以在两个缓冲区之间进行内存复制。
 
 此外，还可以将缓冲区转换成某种编码格式的字符串，或者反过来将字符串转换成缓冲区， 以便访问或处理每个字节。
-
-
 
