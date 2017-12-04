@@ -73,6 +73,9 @@
     },
     "sectionx": {
       "tag": "b"
+    },
+    "include-codeblock": {
+      "template": "ace"
     }
   }
 }
