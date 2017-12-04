@@ -1,5 +1,5 @@
 @charset "UTF-8";
 /* CSS Document */
-.indent {
-  text-indent: 2em;
+p,ul {
+    text-indent: 2em;
 }
