@@ -66,7 +66,8 @@ console.log(buf(10)); // -> 99。这里输出的输出的是 Unicode 字符编�
 >
 > ```js
 > var buf = new Buffer(1024) ;
-> console.log(buf[100]); //-> 5 (某个随机值）
+>
+> console.log(buf[100]); //-> 5 (某个随机值）
 > ```
 
 同样， 也可以处理任意位置上的数据：
@@ -92,7 +93,6 @@ buf[99] = 125; // 将第100个位置上的数据设置为125
 ```js
 var buf = new Buffer(100);
 console.log(buf.length); // -> 100
-
 ```
 
 然后可以使用缓冲区长度迭代缓冲区内容，来设置或者获取每个字节：
@@ -105,4 +105,74 @@ for (var i = 0; i < buf.length; i++) {
 ```
 
 在上面的代码中新建一个大小为 100 字节的缓冲区， 并从 0 ~ 99 依次设置缓冲区中每一个字节。
+
+## 切分缓冲区
+
+—旦创建或获取一个缓冲区， 也许需要将此缓冲区的一部分提取出来。可以通过指定始位置和结束位置来切分缓冲区， 从而创建一个更小的缓冲区， 如下所示：
+
+```js
+var buffer = new Buffer("This is the content of my buffer");
+var smallerBuffer = buffer.slice(8, 19);
+console.log(smallerBuffer.toString()); // -> the content"
+```
+
+注意，在切分缓冲区时并没有分配新的内存，也没有进行任何复制，新缓冲区还是使用父缓冲区的内存区域，只不过引用了父缓冲区不同的起始位置和/或结束位置。这一点蕴含以下几方面的意思。  
+
+
+首先，如果程序修改了父缓冲区， 并且修改只要影响到子缓冲区范围内的数据，那么子缓冲区也会修改。因为父缓冲区和子缓缓冲区是不同的 JavaScript 对象，所以很容易忽略这个问题，导致一些错误。
+
+其次，在用这种方法从父缓冲区创建一个较小的子缓冲区时，父缓冲区在操作结束后依然继续被保留，并不会被垃圾回收器回收，如果不谨慎处理的话，很容易造成内存泄露。
+
+> **\[info\]** 注意：
+>
+> 如果担心因保留父缓冲区而产生内存泄露问是，可以使用 copy 方法来替代 slice 方法，下一节会介绍 copy 方法。
+
+## 复制缓冲区
+
+还可以应用 copy 方法，将缓冲区的一部分复制到另一个缓冲区中，如下所示：
+
+```js
+var bufferl = new Buffer("this is the content of my buffer");
+var buffer2 = new Buffer(ll);
+var targetStart = 0;
+var sourceStart = 8;
+var sourceEnd = 19;
+bufferl.copy(buffer2, targetStart, sourceStart, sourceEnd);
+console.log(buffer2.toString()) // -> "the content"
+
+```
+
+在上面的代码中，将源缓冲区的第8到第19个位置上的数据复制到目标缓冲区的起始位置。
+
+## 缓冲区解码
+
+缓冲区可以转换成一个 UTF-8 编码格式的字符串，如下所示：
+
+```js
+var str = buf.toString();
+```
+
+也可以将缓冲区转换成其他指定编码格式的字符串，例如，如果要将一个缓冲区转换成 base64 编码格式的字符串，可以这样做：
+
+```js
+var b64Str = buf.toString("base64");
+```
+
+还可以使用 `toString` 方法，将 UTF-8 编码格式的字符串转换成 base64 编码格式的字符串，如下所示：
+
+```js
+var utf8String = 'my string';
+var buf = new Buffer(utf8String); // 将缓冲区作为桥梁
+var base64String = buf.toString('base64');
+```
+
+## 本章小结
+
+有时你不得不对二进制数据进行处理， 但是“ 原生态” 的 JavaScript 并没有为处理该任务提供明确的方式。
+
+Node 中的 Buffer 类对访问连续内存块的操作进行了封装，可以处理内存中的数据以及切分缓冲区，还可以在两个缓冲区之间进行内存复制。
+
+此外，还可以将缓冲区转换成某种编码格式的字符串，或者反过来将字符串转换成缓冲区， 以便访问或处理每个字节。
+
+
 
