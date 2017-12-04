@@ -48,12 +48,15 @@ if {err) {
 ```js
 var req = http.request(options, function (response) {
     response.on("data", function (data) {
-        console.log("some data from the response ", data);
+
+console.log("some data from the response ", data);
     });
-   
+
    response.on("end", function () {
-       console.log("response ended");
-   });
+
+console.log("response ended");
+
+});
    req.end();
 }
 ```
@@ -78,8 +81,10 @@ var req = http.request(options, function (response) {
 
 ```js
 var em = new (require('events').EventEmitter)();
-em.emit('event1');
-em.emit('error', new Error('My mistake'));
+
+em.emit('event1');
+
+em.emit('error', new Error('My mistake'));
 ```
 
 然后会看到如下所示的输出信息：
@@ -131,7 +136,7 @@ function receiveData (data) {
 readStream.addListener('data', receiveData);
 ```
 
-还可以用函数 `.on`来代替 `.addListener` ，它只是 `.addListener `的简写形式，下面这段代码和上面那段代码是等效的：
+还可以用函数 `.on`来代替 `.addListener` ，它只是 `.addListener`的简写形式，下面这段代码和上面那段代码是等效的：
 
 ```js
 function receiveData (data) {
@@ -139,6 +144,37 @@ function receiveData (data) {
 }
 
 readStream.on('data', receiveData);
+```
+
+在上面的代码中用一个事先声明的命名函数作为回调函数， 当然也可以使用内联匿名函数代替命名函数以简化代码：
+
+```js
+readStream.on('data', function (data) {
+    console.log('Got data from file read stream :%j', data);
+});
+```
+
+正如前面所指出的那样，传递给回调函数的参数取决于特定的事件发射器对象与事件类型，它并没有被标准化， "data" 事件可能会传递数据缓冲区，"error" 事件可能会传递一个错误对象， 而流的 "end'' 事件则不会向事件监听器传递任何参数。
+
+### 绑定多个事件监听器 
+
+事件发射器模式允许多个事件监听器监听同一事件发射器发射的同一类型的事件，例如：
+
+```js
+readStream.on("data", function (data} {
+    console.log('I have some data here.');
+});
+
+readStream.on('data', function (data) {
+    console.log('I have some data here too.');
+});
+```
+
+在上面的代码中，readStream 对象的 “data” 类型事件上绑定了两个函数，每当 readStream 对象发射 “data” 事件时，就会看到如下所示的输出信息：
+
+```
+I have some data here.
+I have some data here too.
 ```
 
 
