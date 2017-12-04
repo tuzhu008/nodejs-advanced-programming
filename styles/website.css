@@ -16,6 +16,6 @@ ul.summary {
 ul p {
     text-indent: 0;
 }
-blockquote:first-child {
+blockquote>p:first-child {
     text-indent: 0;
 }
