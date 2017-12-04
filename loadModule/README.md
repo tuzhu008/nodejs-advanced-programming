@@ -199,12 +199,13 @@ var myModuleinstance2 = require('./my_module');
 
 ```
 module my_module initializing ...
-module my_module initialized.
+
+module my_module initialized.
 ```
 
 这意味着**模块的初始化过程只执行了一次**， 当构建自定义模块时，如果模块在初始化时可能会产生副作用， 那么理解这一点十分重要。
 
-> **\[info\]** 「编者注：」
+> **\[info\] 「编者注：」**
 >
 > ```js
 > console.log( myModuleinstancel === myModuleinstance2 ); // 结果为true
@@ -219,6 +220,4 @@ Node 取消了JavaScript 默认的全局名称空间，而用 [CommonJS](http://
 可以使用相对或者绝对文件路径加载非核心模块。如果将模块放入 node\_modules 文件夹或者使用 NPM 安装模块， 也可以通过模块名加载。
 
 还可以编写 JavaScript 文件导出表示模块 API 的对象， 以此创建自定义模块。
-
-
 

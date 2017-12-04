@@ -107,7 +107,7 @@ clearInterval(interval);
 
 通过用 `process.nextTick(callback)` 来取代 `setTimeout(callback, 0)` ，回调函数会在事件队列内的所有事件处理完毕后立刻执行，它要比激活 JavaScript 的超时队列快得多（以CPU时间来衡量）。
 
-> **\[&lt;i class="fa fa-pencil"&gt;&lt;/i&gt;\]**「编者注：」
+> **\[info\]「编者注：」**
 >
 > 超时队列是将事件添加到下一轮事件循环的事件队列中，而 nextTick 是将回调安排在下一轮时间循环的事件队列的最前面。
 

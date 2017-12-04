@@ -240,7 +240,7 @@ EventEmitter.prototype.once = function (type, callback) {
 
 在上面的代码中，重新定义了 `EventEmitter.prototype.once` 函数，这相当于重新定义了继承自 `EventEmitter` 所有对象的 `once` 方法，并在获取事件后使用 `.removeListener()` 方法取消了回调函数的注册，同时调用原来的回调函数。
 
-> **\[info\]** 注意：
+> **\[info\] 注意：**
 >
 > 在上面的代码中用到了如 [`function.apply()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) 方法，该方法接受一个对象以及一个参数数组，并将接受的对象作为一个隐含的 this 变量。在上面的例子中，向回调函数传入了一个未经修改的参数数组，也即允许事件发射器将所有参数原封不动且透明地传送给回调函数。
 
@@ -258,7 +258,7 @@ emitter.removeAllListeners(type);
 process.removeAllListener("SIGTERM")
 ```
 
-> **\[info\]** 注意：
+> **\[info\] 注意：**
 >
 > 一般而言，本书建议你仅在确实知道要删除的对象时才使用该函数，否则就应该让应用程序的其他部分删除事件监听器集合，或者也可以让应用程序的那些部分自己负责删除事件监听器集合。但不管怎样，在一些罕见的情况下，该函数还是很有用的，例如在按顺序关闭事件发射器甚至关闭整个进程时。
 
@@ -281,7 +281,7 @@ var MyClass = function () {
 util.inherits(MyClass, EventEmitter);
 ```
 
-> **\[info\]** 注意：
+> **\[info\] 注意：**
 >
 > `util.inherits` 建立了一条原型链，使 MyClass 类实例能够使用 EventEmitter 类的原型方法。
 
@@ -337,6 +337,4 @@ ticker.on('tick', function () {
 可以使用 `event_emitter.on()` 为特定类型的事件注册事件监听器， 还可以使用 `event_emitter.removeListener()` 取消注册。
 
 此外，还可以通过继承 EventEmitter 类以及简单地使用 `.emit` 函数来创建自定义的事件发射器。
-
-
 
