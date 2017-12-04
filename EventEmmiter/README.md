@@ -156,7 +156,7 @@ readStream.on('data', function (data) {
 
 正如前面所指出的那样，传递给回调函数的参数取决于特定的事件发射器对象与事件类型，它并没有被标准化， "data" 事件可能会传递数据缓冲区，"error" 事件可能会传递一个错误对象， 而流的 "end'' 事件则不会向事件监听器传递任何参数。
 
-### 绑定多个事件监听器 
+### 绑定多个事件监听器
 
 事件发射器模式允许多个事件监听器监听同一事件发射器发射的同一类型的事件，例如：
 
@@ -172,10 +172,175 @@ readStream.on('data', function (data) {
 
 在上面的代码中，readStream 对象的 “data” 类型事件上绑定了两个函数，每当 readStream 对象发射 “data” 事件时，就会看到如下所示的输出信息：
 
+```bash
+I have some data here.
+I have some data here too
 ```
-I have some data here.
-I have some data here too.
+
+根据事件类型，事件发射器负责按照事件所绑定的监听器的_注册顺序_依次调用事件监听器， 这意味着以下两件事：
+
+* 某个事件监听器也许并不会在事件发射之后立即被调用，也许在它之前会有别的事件监听器被调片。
+
+* 异常被抛出到堆栈并不正常，它通常是由代码中的错误引起的。当事件被发射时，如果其中某个事件监听器在被调用时抛出错误，可能会导致一些事件监听器永远都不会被调用， 在这种情况下，事件发射器将会捕捉到错误，也许还会处理它。
+
+考虑下面这个例子：
+
+```js
+readStream.on('data', function (data) {
+    throw new Error("Something wrong has happened");
+});
+
+readStream.on('data', function (data) {
+    throw new Error("I have some data too.");
+});
 ```
+
+本例中由于第一个事件监听器抛出了一个错误， 所以第二个事件监听器也就不会被调用。
+
+### 使用 `.removeListener()` 从事件发射器中删除一个事件监听器
+
+如果希望当一个对象发射了某个特定事件时不再收到通知的话， 可以通过指定事件类型和回调函数来取消注册的事件监听器， 示例代码如下所示：
+
+```js
+function  receiveData(data) {
+ console.log("got data from file read stream: %j", data);
+}
+readStream.on("data", receiveData);
+// ...
+readStream.removeListener("data", receiveData);
+```
+
+在上面的例子中， 最后一行把一个可能在将来被随时调用的事件监听器从事件发射器对象中删除。
+
+为了删除指定的事件监听器，就必须为回调函数命名， 因为回调函数名至少要在两处用到 —— 注册和删除事件监听器时。
+
+### 使用 `.once()` 使回调函数最多执行一次
+
+如果想监听最多只发生一次的事件， 或者只是对某个类型的事件第一次发生时感兴趣， 则可以使用 `.once()` 函数。
+
+该方法增加了一个事件监听器，并在第一个事件发生后删除它。
+
+```js
+function receiveData (data) {
+ console.log("got data from file read stream: %j", data);
+}
+readStream.once("data", receiveData);
+```
+
+在上面的代码中，`receiveData` 函数只会被调用一次，如果在 `readStream` 对象上发射  "data" 事件， `receiveData` 回调函数仅会被触发一次。
+
+这是个方便的方法， 因为可以很容易就实现它， 如下所示：
+
+```js
+var EventEmitter = require("events").EventEmitter;
+EventEmitter.prototype.once = function (type, callback) {
+ var that = this;
+ this.on(type, function listener() {
+  that.removeListener(type, listener);
+  callback.apply(that, arguments);
+ });
+};
+```
+
+在上面的代码中，重新定义了 `EventEmitter.prototype.once` 函数，这相当于重新定义了继承自 `EventEmitter` 所有对象的 `once` 方法，并在获取事件后使用 `.removeListener()` 方法取消了回调函数的注册，同时调用原来的回调函数。
+
+> **\[info\]** 注意：
+>
+> 在上面的代码中用到了如 [`function.apply()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) 方法，该方法接受一个对象以及一个参数数组，并将接受的对象作为一个隐含的 this 变量。在上面的例子中，向回调函数传入了一个未经修改的参数数组，也即允许事件发射器将所有参数原封不动且透明地传送给回调函数。
+
+### 使用 `.removeAlIListeners()` 从事件发射器删除所有事件监听器
+
+可以从事件发射器中删除所有针对某一指定类型的事件而注册的事件监听器， 如下所示：
+
+```js
+emitter.removeAllListeners(type);
+```
+
+例如， 如果想删除进程中断事件的所有事件监听器， 那么可以这样做， 如下所示：
+
+```js
+process.removeAllListener("SIGTERM")
+```
+
+> **\[info\]** 注意：
+>
+> 一般而言，本书建议你仅在确实知道要删除的对象时才使用该函数，否则就应该让应用程序的其他部分删除事件监听器集合，或者也可以让应用程序的那些部分自己负责删除事件监听器集合。但不管怎样，在一些罕见的情况下，该函数还是很有用的，例如在按顺序关闭事件发射器甚至关闭整个进程时。
+
+## 创建事件发射器
+
+事件发射器提供了一种很好的方法来构建更为通用的编程接口。在一个常见易懂的编程模式中，客户端用绑定事件来代替回调函数，这会使程序更加灵活。
+
+此外， 通过使用事件发射器， 还可以免费获得一些特性，比如在一个事件上绑定多个独立的事件监听器。
+
+### 从 Node 事件发射器继承
+
+如果有兴趣在自己的应用程序中自始至终都使用 Node 事件发射器， 那么可以创建一个继承自 EventEmitter 的伪类， 示例代码如下所示：
+
+```js
+var util = require('util');
+var EventEmitter = require('events').EventEmitter;
+// MyClass的构造函数
+var MyClass = function () {
+}
+util.inherits(MyClass, EventEmitter);
+```
+
+> **\[info\]** 注意：
+>
+> `util.inherits` 建立了一条原型链，使 MyClass 类实例能够使用 EventEmitter 类的原型方法。
+
+### 发射事件
+
+通过创建继承自 EventEmitter 的类，MyClass 的类实例就可以发射事件了：
+
+```js
+MyClass.prototype.someMethod = function () {
+    this.emit("custom event", "argument 1", "argument 2");
+};
+```
+
+此处当 someMethod 方法被 MyClass 的实例调用时，就会发射一个名为 custom event 的事件，该事件还会发射若干数据，本例中是：“argument 1” 和 “argument 2”，他们将作为参数传递给事件监听器。
+
+MyClass 类实例的客户端可以监听 custom event 事件，示例代码如下：
+
+```js
+var myInstance = new MyClass();
+myInstance.on('custom event', function(str1, str2) {
+    console.log('Got a custom event with the str1 %s and str2 %s', str1, str2);
+});
+```
+
+例如，可以创建一个名为 Ticker 的伪类，让它每秒发射一个 “tick” 事件：
+
+```js
+var util = require('util');
+EventEmitter = require('events').EventEmitter;
+
+var Ticker = function () {
+    var self = this;
+    setInterval(function () {
+        self.emit('tick');
+    }, 1000);
+};
+util.inherits(Ticker, EventEmitter);
+```
+
+Ticker 类的客户端可以实例化该类，并监听 “tick” 事件，如下所示：
+
+```js
+var ticker = new Ticker();
+ticker.on('tick', function () {
+    console.log('tick');
+});
+```
+
+## 本章小结
+
+事件监听器是 Node 中的一种可重入模式，可以用它将事件发射器对象与关注一组特定的代码解耦。
+
+可以使用 `event_emitter.on()` 为特定类型的事件注册事件监听器， 还可以使用 `event_emitter.removeListener()` 取消注册。
+
+此外，还可以通过继承 EventEmitter 类以及简单地使用 `.emit` 函数来创建自定义的事件发射器。
 
 
 
