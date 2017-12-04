@@ -1,3 +1,14 @@
-# My Awesome Book
+# 关于本书
 
-This file file serves as your book's preface, a great place to describe your book's content and ideas.
+这本书是『 Node.js 高级编程 』 的Gitbook版本，是本闲人自学过程的手工整理版本。修正了书中一些明显的错误，并且所有代码均由本人亲自调试，以保证其正确性。由于原本书籍成书较早，有些内容与现有的 Node 版本有出入，在此中也做修正。
+
+## 致谢
+
+非常感谢『 Node.js 高级编程 』原作者以及中文译者，他们对我学习 Node.js 有非常大的帮助。
+
+## 版权声明
+
+本书为本人学习记录之用，其余猿友可参考之，若有兴趣，请支持购买原版或者中文版书籍。若侵犯他方利益，请联系本人删除。谢谢！
+
+
+
