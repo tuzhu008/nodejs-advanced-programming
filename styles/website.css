@@ -7,5 +7,8 @@ p {
     text-indent: 2em;
 }
 ul {
-    padding-left: 2em;
+    padding-left: 4em;
+}
+ul p {
+    text-indent: 0;
 }
