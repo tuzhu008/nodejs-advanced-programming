@@ -346,7 +346,6 @@ child.stderr.on('data', function (data) {
 >
 > 请注意在 `setInterval` 的回调函数中， 对子进程的输出进行监听的时候一定要使用 `child.stdout.once` 而不是 `child.stdout.on`。因为后者注册的监听器会一直存在，也就是说每秒钟我们都会注册一个监听器，而这些监听器会叠加，都会存在。当有子进程输出的时候这些监听器都会检测到数据，它们的回调函数也会被调用。`child.stdout.once`则只会监听一次。
 
-  
 上面的代码中，启动了一个运行 “+1 app” 的子进程。
 
 然后使用 `setlnterval` 函数每隔一秒执行一次以下操作：
@@ -393,4 +392,42 @@ child.on('exit', function (code) {
 ```
 
 在本例中，exit 事件触发了一个回调函数，并将退出码传递给它，作为其第一个参数，如果子进程是被一个信号终止而不是正常退出的话，那么相应的信号也会被传递给这个回调函数，作为其第二个参数：
+
+```js
+var spawn = require('child_process').spawn;
+
+var child = spawn('sleep', ['10']);
+
+setTimeout(function () {
+    child.kill();
+}, 1000)
+
+child.on('exit', function (code, signal) {
+    if (code) {
+        console.log('child process terminated with code: ' + code) ;
+    } else if (signal) {
+        console.log('child process terminated because of signal ' + signal);
+    }
+});
+```
+
+在上面的代码中，启动了一个子进程来执行一条为时 10 秒的休眠命令， 但还没有到 10 秒， 就又向子进程发送了一个`SIGKJLL` 信号， 这将会打印出如下所示的输出信息：
+
+```bash
+child process terminated because of signal SIGTERM
+```
+
+## 向进程发送信号并终止进程
+
+在本节中， 你将学习如何使用信号来控制子进程， 信号是父进程和子进程进行通信的一种简单方式， 甚至可以用它来终止子进石。
+
+不同的信号代码具有不同的含义，而且信号的类型多样，最常见的一种类型是用来终止进程的。如果进程收到一个它不知如何处理的信号，它就会终止。一些信号可以由子进程处理，而另一些信号却只能由操作系统处理。
+
+一般而言，可以使用 `child.kill` 方法向子进程发送一个信号，默认发送的是 `SIGTERM` 信号，如下所示：
+
+
+
+
+
+
 
