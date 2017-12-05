@@ -136,7 +136,129 @@ path.extname('a/b/c/d.'); // -> '.'
 >
 > [`fs.stat()`](#) 或者 [`fs.access()`](#) 都是异步的，如果想要使用同步检测，请使用 [`fs.existsSync()`](http://nodejs.cn/api/fs.html#fs_fs_existssync_path)
 
+## fs 模块简介
 
+fs 模块中存放了所有文件查询和操作函数，利用这些函数，可以查询文件的统计信息、打开文件、读写文件和关闭文件：
 
+```js
+var fs = require('fs');
+```
 
+### 查询文件的统计信息
+
+有时可能需要了解文件的一些特征，例如大小、创建事件或者权限，可以使用 [`fs.stat`](http://nodejs.cn/api/fs.html#fs_fs_stat_path_callback) 函数来查询文件或目录的元信息：
+
+```js
+var fs = require('fs');
+
+fs.stat('./app.js', function(err, stats) {
+  if (err) {
+    throw err;
+  }
+  console.log(stats);
+});
+```
+
+运行上述代码会输出如下信息：
+
+```bash
+Stats {
+  dev: 16777220,
+  mode: 33188,
+  nlink: 1,
+  uid: 501,
+  gid: 20,
+  rdev: 0,
+  blksize: 4194304,
+  ino: 8595497132,
+  size: 52,
+  blocks: 8,
+  atimeMs: 1512440408040.5889,
+  mtimeMs: 1512440407027.7988,
+  ctimeMs: 1512440407027.7988,
+  birthtimeMs: 1512440370653.0386,
+  atime: 2017-12-05T02:20:08.041Z,
+  mtime: 2017-12-05T02:20:07.028Z,
+  ctime: 2017-12-05T02:20:07.028Z,
+  birthtime: 2017-12-05T02:19:30.653Z }
+```
+
+`fs.stat()` 函数调用会将 [stats 类](http://nodejs.cn/api/fs.html#fs_class_fs_stats)的一个实例传递给其回调函数，可以用这个实例调用以下函数：
+
+* `stats.isFile() `—— 如果是标准文件，而不是目录、套接字、符号链接或者设备的话，返回 true。
+
+* `stats.isDirectory()`—— 如果是目录，返回 true。
+
+* `stats.isBlockDevice()`—— 如果是块设备返回 true，在大多数 UNIX 系统中块设备一般都位于 /dev 目录下。
+
+* `stats.isCharacterDevice()`—— 如果是字符设备，返回 true。
+
+* `stats.isSymbolicLink()`\(仅对[`fs.lstat()`](http://nodejs.cn/api/fs.html#fs_fs_lstat_path_callback)=有效\)—— 如果是符号链接，返回true。
+
+* `stats.isFIFO()`—— 如果是 FIFO （UNIX 中一种特殊类型的命名管道），返回 true。
+
+* `stats.isSocket()`—— 如果是 UNIX 套接字，返回 true。
+
+## 打开文件
+
+在读取或者处理文件之前，必须首先使用 [`fs.open`](http://nodejs.cn/api/fs.html#fs_fs_open_path_flags_mode_callback) 函数打开文件，然后使用文件描述符调用所提供的回调函数，稍后就可以用这个回调函数对打开的文件进行读写。
+
+```js
+var fs = require('fs');
+fs.open('/path/to/file', 'r', function (fd) {
+    // fd 为文件描述符
+});
+```
+
+`fs.open()` 函数的第一个参数是文件路径。第二个参数是标志位，表示以何种模式打开，它可以是以下的值：
+
+* `'r'`- 以读取模式打开文件。如果文件不存在则发生异常。
+
+* `'r+'`- 以读写模式打开文件。如果文件不存在则发生异常。
+
+* `'rs+'`- 以同步读写模式打开文件。命令操作系统绕过本地文件系统缓存。
+
+  这对 NFS 挂载模式下打开文件很有用，因为它可以让你跳过潜在的旧本地缓存。 它对 I/O 的性能有明显的影响，所以除非需要，否则不要使用此标志。
+
+  注意，这不会使`fs.open()`进入同步阻塞调用。 如果那是你想要的，则应该使用`fs.openSync()`。
+
+* `'w'`- 以写入模式打开文件。文件会被创建（如果文件不存在）或截断（如果文件存在）。
+
+* `'wx'`- 类似`'w'`，但如果`path`存在，则失败。
+
+* `'w+'`- 以读写模式打开文件。文件会被创建（如果文件不存在）或截断（如果文件存在）。
+
+* `'wx+'`- 类似`'w+'`，但如果`path`存在，则失败。
+
+* `'a'`- 以追加模式打开文件。如果文件不存在，则会被创建。
+
+* `'ax'`- 类似于`'a'`，但如果`path`存在，则失败。
+
+* `'a+'`- 以读取和追加模式打开文件。如果文件不存在，则会被创建。
+
+* `'ax+'`- 类似于`'a+'`，但如果`path`存在，则失败。
+
+## 读取文件
+
+文件一旦打开， 就可以对其进行读取， 但在读取之前，必须创建一个缓冲区来放置数据。缓冲区被传递到充满文件数据的 `fs.read` 函数。
+
+include, template="ace"
+
+上面的代码中，尝试打开一个文件，当文件成功打开之后（调用 opened 函数）， 要求从所提供的缓冲区的第100个字节（第11行）开始， 读取随后的1024个字节的数如。
+
+fs􀆃readO调用的最后一个参数是一个回调函数（第16行）， 当下列三种情况之一发生时
+
+就会调用该回调函数：
+
+． 有错误发工。
+
+． 成功读取了数先。
+
+． 没有数据可读。
+
+当发生错误时，回调函数通过第一个参数获取一个错误对象， 否则该参数为null。
+
+果成功读取了数据，第二个参数\(readBytes\)获得读入缓冲区的字节数， 如果其值为o, 则代
+
+到达文件结毛o
 
