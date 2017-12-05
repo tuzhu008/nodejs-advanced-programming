@@ -195,7 +195,7 @@ console.log('stderr: ' , stderr);
 var number = process.env.number;
 console.log(typeof(number)); // -> "string"
 number = parseInt(number, 10); 
-console.log(typeof(number)); // -> "number 
+console.log(typeof(number)); // -> "number
 ```
 
 进入存放这两段源代码所在的文件夹， 使用命令行运行它：
@@ -225,6 +225,126 @@ stderr:
 * 子进程的输出是被缓存的，结果是无法对其进行流操作，它可能会耗尽内存。
 
 幸运的是，Node 的 `child_process` 模块允许对子进程的启动、终止以及与其进行交互进行更精细的控制。你也许会在程序（也就是父进程）中新建一个进程（也就是子进程）一旦启动了一个新的子进程，Node 就创建了一个双向通信通道，两个进程可以利用这条通道互相收发字符串形式的数据，父进程还可以对子进程施加一些控制、向其发送信号或者强制终止子进程。
+
+### 创建子进程
+
+可以基于 `child_process.spawn` 函数创建子进程，如下所示：
+
+```js
+// 导入 child_process 模块中定义的 spawn 函数
+var spawn = require('child_process').spawn;
+
+// 用"tail -f /var/log/system.log" 命令启动子进程
+var child = spawn('tail', ['-f', '/var/log/system.log']);
+```
+
+在上面的代码中，创建了一个子进程，通过传递 `-f` 和 `/var/log/system.log` 参数执行 `tail` 命令，`tail` 命令监视文件`/var/log/system.log` \(如果该文件存在的话），并且输出的新数据都被附加到 `stdout` 流中，`spawn` 函数会返回一个`ChildProcess` 对象，该对象是一个句柄，它封装了对实际进程的访问，此处将这个对象的描述符赋值给 child 变量。
+
+### 监听子进程的输出数据
+
+任何一个子进程句柄都有一个属性 `stdout`， 它以**流**的形式表示子进程的标准输出信息，然后可以在这个流上绑定事件， 就如同说 “ 对于从子进程输出中获取的每个数据块， 都要调用回调函数 ”。下面是一个例子：
+
+```js
+// 将子进程的输出打印至控制今
+child.stdout.on('data', function(data) {
+    console.log('tail output: ' + data); 
+});
+```
+
+每当子进程将数据输出到其标准输出时，父进程就会得到通知并将其打印至控制台。
+
+除了标准输出之外， 进程还有一个默认输出流： _standard error_ 流， 进程通常利用该流输出错误消息。
+
+在上面的例子中， 如果文件 `/var/log/system.log` 不存在，`tail` 进程就会输出这样的消息： tail: /var/log/system.log: No such ftle or directory。 父进程通过监听 stderr 流， 就会在出现错误时得到通知。
+
+```js
+child.stderr.on('data', function(data) {
+    console.log('tail error output:', data);
+});
+```
+
+与 `stdout` 一样，`stderr` 也是一个可读流，在本例中，每当子进程往标准错误流中输出数据时，父进程都会得到通知并打印出这些数据。
+
+### 向子进程发送数据
+
+除了从子进程的输出流中获取数据之外，父进程也向子进程的标准输入流中写入数据，这相当于向子进程发送数据，标准输入流是用`childProcess.stdin` 属性表示的。
+
+子进程也可以使用 `process.stdin` 流来监听数据，但是注意，**首先得恢复流**，因为在**默认情况下它处于暂停状态**。
+
+下面我们将构建如下例子：
+
+* **+1 app**： 一个简单的应用程序，在其标准输入流上获取整数，并将整数加 1 然后将加 1 后的整数输出到标准输出流中。
+
+ **plus\_one. js**
+
+```js
+// 解除 stdin 流的暂停状态
+process.stdin.resume();
+process.stdin.on('data', function (data) {
+    var number;
+    try {
+        // 将输入数据解析为一个数
+        number = parseInt(data.toString(), 10);
+        number ++;
+        
+        // 输出到标准输出流
+        process.stdout.write(number + '\n');
+    } catch (err) {
+        process.stdout.write(err.message + '\n');
+    }
+});
+```
+
+在上面的代码中，你在等待来自 `stdin` 流的数据，每当有数据可获取时都假定它是个整数，并将数据解析到一个整型变量 `number` 中， 然后加 1, 并将加 1 后的结果输出到 `stdout` 流。
+
+可以调用如下命令运行这个简单的程序：
+
+```bash
+$ node plus_one.js 
+```
+
+运行之后， 应用程序就等待输入，如果输入一个整数然后按回车键，就会在屏幕 上看到一个个加 1 后返回的整数。
+
+可以输入 Ctrl+C 退出应用程序。
+
+**1 . 测试客户端**
+
+现在要创建一个 Node 进程来使用前面的 "+I应用程序 ” 提供的计算服务。
+
+自先创建文件 plus\_one\_test.js：
+
+**plus\_one\_test.js**
+
+```js
+var spawn = require('child_process').spawn;
+
+// 使用node进程创建一个子进程执行plus_one使用程序
+var child = spawn('node', ['plus_on.js']);
+
+// 每隔1秒钟调用一次该函数
+setInterval(function () {
+    
+    // 产生一个小于10000的随机数
+    var number = Math.floor(Math.random() * 10000);
+    
+    // 将该随机数发送到子进程
+    child.stdin.write(number + '\n');
+    
+    // 获得子进程的响应并打印出来
+    child.stdout.once('data', function (data) {
+        console.log('child replied to ' + number + ' with: ' + data);
+    });
+}, 1000);
+
+// 监听子进程的错误信息
+child.stderr.on('data', function (data) {
+    process.stdout.write(data);
+});
+```
+
+> **\[info\] 「编者注：」**
+>
+> 请注意在 `setInterval` 的回调函数中，chil
 
 
 
