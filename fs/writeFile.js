@@ -1,6 +1,6 @@
 var fs =  require('fs');
 
-fs.open('./test.txt', 'w', function (err, fd) {
+fs.open('./test.txt', 'a', function (err, fd) {
   if (err) {
     throw err;
   }
@@ -13,7 +13,7 @@ fs.open('./test.txt', 'w', function (err, fd) {
            bufferPosition,
            bufferLength,
            filePosition,
-           function (err, written) {
+           function wrote (err, written) {
               if (err) {
                 throw err;
               }
