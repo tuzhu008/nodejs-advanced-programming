@@ -425,9 +425,35 @@ child process terminated because of signal SIGTERM
 
 一般而言，可以使用 `child.kill` 方法向子进程发送一个信号，默认发送的是 `SIGTERM` 信号，如下所示：
 
+```js
+var spawn = require('child_process').spawn;
+var child = spawn('sleep', ['10']);
+setTimeout(function () {
+    child.kill();
+}, 1000);
+```
 
+还可以将一个表示信号类型的字符串传递给 `child.kill` 方法，作为其唯一的参数，一次发送某个特定的信号，如下所示：
 
+```js
+child.kill('SIGUSR2');
+```
 
+注意，尽管方法名是 kill， 但是发送的信号却不一定会终止进程。如果由子进程来处理该信号的话，那么该信号的默认行为被重写。在 Node 中，子进程可以定义一个信号程序来处理重写信号，如下所示：
 
+```js
+process.on('SIGUSR2', function () {
+    console.log('Got a SIGUSR2 signal');
+});
+```
+现在为 SIGUSR2 定义一个信号处理程序，进程在收到该信号后不会被终止，取而代之的是输出 "Gota SIGUSR2 signal"。通过使用这种机制，可以设计一种简单的方法来和子进程通信，甚至控制子进程，这种方法虽然不像标准输入流那样功能丰富，但是却简单得多。
+
+SIGKILL 和 SIGSTOP 是由操作系统处理的特殊信号，并且进程不能重写其默认行为，即使已经为这两个信号定义了处理程序，它们也会终止进程。
+
+## 本章小结
+
+在本章中，使用 `child_process.exec` 函数执行了外部命令，该函数允许你可以不使用命令行参数，而是通过定义环境变量的方式将参数传递给子进程。
+
+你还学习了使用 `child_process.spawn` 方法，通过创建子进程来执行外部命令，这样可以使用输入流和输出流与子进程进行交互，另外还允许你使用信号和子进程交互甚至终止子进程。
 
 
