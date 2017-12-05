@@ -275,7 +275,7 @@ child.stderr.on('data', function(data) {
 
 * **+1 app**： 一个简单的应用程序，在其标准输入流上获取整数，并将整数加 1 然后将加 1 后的整数输出到标准输出流中。
 
- **plus\_one. js**
+  **plus\_one. js**
 
 ```js
 // 解除 stdin 流的暂停状态
@@ -286,7 +286,7 @@ process.stdin.on('data', function (data) {
         // 将输入数据解析为一个数
         number = parseInt(data.toString(), 10);
         number ++;
-        
+
         // 输出到标准输出流
         process.stdout.write(number + '\n');
     } catch (err) {
@@ -300,7 +300,7 @@ process.stdin.on('data', function (data) {
 可以调用如下命令运行这个简单的程序：
 
 ```bash
-$ node plus_one.js 
+$ node plus_one.js
 ```
 
 运行之后， 应用程序就等待输入，如果输入一个整数然后按回车键，就会在屏幕 上看到一个个加 1 后返回的整数。
@@ -323,13 +323,13 @@ var child = spawn('node', ['plus_on.js']);
 
 // 每隔1秒钟调用一次该函数
 setInterval(function () {
-    
+
     // 产生一个小于10000的随机数
     var number = Math.floor(Math.random() * 10000);
-    
+
     // 将该随机数发送到子进程
     child.stdin.write(number + '\n');
-    
+
     // 获得子进程的响应并打印出来
     child.stdout.once('data', function (data) {
         console.log('child replied to ' + number + ' with: ' + data);
@@ -344,7 +344,53 @@ child.stderr.on('data', function (data) {
 
 > **\[info\] 「编者注：」**
 >
-> 请注意在 `setInterval` 的回调函数中，chil
+> 请注意在 `setInterval` 的回调函数中， 对子进程的输出进行监听的时候一定要使用 `child.stdout.once` 而不是 `child.stdout.on`。因为后者注册的监听器会一直存在，也就是说每秒钟我们都会注册一个监听器，而这些监听器会叠加，都会存在。当有子进程输出的时候这些监听器都会检测到数据，它们的回调函数也会被调用。`child.stdout.once`则只会监听一次。
 
+  
+上面的代码中，启动了一个运行 “+1 app” 的子进程。
 
+然后使用 `setlnterval` 函数每隔一秒执行一次以下操作：
+
+* 创建一个小于10 000的随机自然数。
+
+* 将产生的随机数作为一个字符串发送给子进程。
+
+* 等待子进程返回一个字符串。
+
+因为针对每个数你只希望从子进程中获取一次数据，所以使用的是 `child.stdout.once` 函数，而不是 `child.stdout.on` 函数，如果使用的是后者，那么随着时间的推移，将要注册多个回调函数，这样的话每当从子进程的 `stdout` 上获得数据时， 所有回调函数都会被调用，这样会导致同一数据被多次输出，这显然是错误的。
+
+### 子进程退出时获得通知
+
+当子进程退出时，会在父进程上触发一个事件 ，下面的代码展示了如何监听该事件：
+
+```js
+var spawn = require('child_process').spawn;
+
+var child = spawn('ls', ['-la']);
+
+child.stdout.on('data', function () {
+    console.log('data from child: ' + data) ,
+});
+
+// 当子进程退出时
+child.on('exit', function (code) {
+    console.log('child process terminated with code: ' + code);
+});
+```
+
+最后加粗显示的代码表示开始监听子进程的 `exit` 事件，当该事件出现时，就将子进程终止的相关信息打印至控制台。子进程的**「退出码」**会被传递给回调函数，作为其第一个参数。一些程序以非 0 的退出码表示发生错误。例如，如果尝试执行命令 `ls -la filename.txt` ,而在当前目录中并不存在文件 `filename.txt`，就会得到退出码 1， 如果试着运行下面的例子，将会得到一样的结果。
+
+```js
+var spawn = require('child_process').spawn;
+
+// 创建子进程
+var child = spawn('ls', ['does_not_exist.js']);
+
+// 当子进程退出时
+child.on('exit', function (code) {
+    console.log('child process terminated with code: ' + code);
+});
+```
+
+在本例中，exit 事件触发了一个回调函数，并将退出码传递给它，作为其第一个参数，如果子进程是被一个信号终止而不是正常退出的话，那么相应的信号也会被传递给这个回调函数，作为其第二个参数：
 
