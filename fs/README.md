@@ -242,7 +242,7 @@ fs.open('/path/to/file', 'r', function (fd) {
 
 文件一旦打开， 就可以对其进行读取， 但在读取之前，必须创建一个缓冲区来放置数据。缓冲区被传递到充满文件数据的 `fs.read` 函数。
 
-[include](/fs/readFile.js)
+[include](./readFile.js)
 
 上面的代码中，尝试打开一个文件，当文件成功打开之后（调用 opened 函数）， 要求从文件的第100个字节（第10行）开始读取， 读取 `filePostion` 后的1024个字节。读取的数据将存入缓冲区。
 
