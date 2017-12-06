@@ -379,7 +379,7 @@ server.on('connection', function (socket) {
     console.log('got a new connection');
     // 存储新连接
     sockets.push(socket);
-    
+
     socket.on('data', function (data) {
         console.log('got data:', data); 
     });    
@@ -413,10 +413,10 @@ server.on('connection', function (socket) {
     console.log('got a new connection');
 
     sockets.push(socket);
-    
+
     socket.on('data', function (data) {
         console.log('got data:', data); 
-        
+
         // 向其他客户端发送数据
         sockets.forEach(function (otherSocket) {
             if (socket !== otherSocket) {
@@ -454,17 +454,17 @@ server.on('connection', function (socket) {
     console.log('got a new connection');
 
     sockets.push(socket);
-    
+
     socket.on('data', function (data) {
         console.log('got data:', data); 
-        
+
         sockets.forEach(function (otherSocket) {
             if (socket !== otherSocket) {
                 otherSocket.write(data);
             }
         });
     });
-    
+
     // 监听 socket 的关闭事件
     socket.on('close', function () {
         console.log('coonection closed');
@@ -484,5 +484,33 @@ server.on('close', function () {
 server.listen(4001);
 ```
 
+### 使用TCP聊天服务器
 
+现在应该准备对服务器进行测试，使用下面的代码：
+
+```bash
+$ node chatServer.js
+```
+
+现在可以用 nc 或者 telnet 连接服务器：
+
+```js
+$ nc localhost 4001 
+```
+
+如果可以，请试着启动几个单独的客户端窗口，可以看到聊天服务器在运行中。
+
+## 本章小结
+
+TCP服务器会在其生命周期内发射一些事件， 即在被绑定到某个端口上时会发射  “监听” 事件，被关闭时会发射 “关闭 ” 事件，而出现错误时会发射 “错误 ” 事件。 还可以监听 “连接 ” 事件， 该事件会在新客户端连接时出现。连接事件会向你提交一个socket对象，socket 对象既是可读流又是可写流， 可以用该对象来监听数据、 发送数据、 终止连接， 甚至可以将连接数据传入另一个流中， 反过来也可以将一个可读流传入连接。
+
+socket 对象允许你使用 `socket.pause()`和 `socket.resume()` 控制它的流程，还允许你对它的一些参数进行微调。例如，可以在连接空闲一段时间后关闭它、频繁发送保持活跃的空数据包，或者打开或关闭 Nagle 算法。
+
+此外，还可以创建处理大量连接的TCP服务器，客户端使用这个服务器按照某种方式彼此之间进行通信， 例如本章创建的聊天服务器示例。
+
+
+
+## 附：示例代码
+
+[include](./chatServer.js)
 
