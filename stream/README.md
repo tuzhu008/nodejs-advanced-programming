@@ -327,6 +327,7 @@ fs = require('fs');
 require('http').createServer(function (req, res) {
     rs.createReadStream('/path/to/big/file');
 
+    // 传入选项对象
     rs.pipe(res, {end: false});
 
     rs.on('end', function () {
