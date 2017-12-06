@@ -12,7 +12,7 @@
 
 * 构建一个 TCP 聊天服务
 
-传输控制协议(Transmission Control Protocol，TCP)是 Internet 的基础协议之一， 它位于网际协议(Internet Ptotocol, IP)之上，为应用层提供了一种传输机制。例如， HTTP 工作在 TCP 之上， 其他很多面向连接的应用（诸如iRC、SMTP 和 IMAP)也工作在 TCP 之上。
+传输控制协议\(Transmission Control Protocol，TCP\)是 Internet 的基础协议之一， 它位于网际协议\(Internet Ptotocol, IP\)之上，为应用层提供了一种传输机制。例如， HTTP 工作在 TCP 之上， 其他很多面向连接的应用（诸如iRC、SMTP 和 IMAP\)也工作在 TCP 之上。
 
 Node 以 `http.Server` 中伪类的形式一流地实现了HTTP 服务器，该伪类继承自 `net.Server` 中的 TCP 服务器伪类，这意味着本章中叙述的所有内容同样能应用到 Node HTTP 服务器中。
 
@@ -30,7 +30,7 @@ require('net').createServer(function (socket) {
     socket.on('end', function () {
         // 关闭链接
     });
-    
+
     socket.write('Some string');
 }).listen(3000);
 ```
@@ -95,7 +95,7 @@ Server has a new connection
 Server is now closed
 ```
 
-> **[info] 「编者注」:**
+> **\[info\] 「编者注」:**
 >
 > 当在本地环境使用命令行进行测试时，请使用与服务器不同的命令行窗口进行连接。
 
@@ -146,7 +146,7 @@ require('net').createServer(function (socket) {
 $ nc localhost 3000
 ```
 
-你想输入多少就输入多少，但至少要按一次 <回车键> 将输入输入。然后你就可以打开文件 mysocketdump.txt 找到你输入的文本。
+你想输入多少就输入多少，但至少要按一次 &lt;回车键&gt; 将输入输入。然后你就可以打开文件 mysocketdump.txt 找到你输入的文本。
 
 可以反其道而行之，将一个可读流输入到套接字中，如下面的代码所示。为了达到这一目的，必须在本地创建一个 Hello.txt 的文件，在其中填入一些随机文本，然后运行程序。
 
@@ -173,7 +173,7 @@ socket.on('timeout', function () {
 });
 ```
 
-或者也可以使用一种较为简约的方式，即传递事件监听器作为 `socket.setTimeout()` 函数的第二个参数。]
+或者也可以使用一种较为简约的方式，即传递事件监听器作为 `socket.setTimeout()` 函数的第二个参数。\]
 
 ```js
 var timeout = 60000; // 1分钟
@@ -200,7 +200,7 @@ Socket.setKeepAlive(true);
 socket.keepAlive(true, 10000); // 10秒
 ```
 
-> **[info] 注意：**
+> **\[info\] 注意：**
 >
 > 保持运行设置和前面讨论的套接字超时设置没有关系，`socket.setKeepAlive()` 设置周期性地发送空数据包以保持连接运行，而 `socket.setTimeout()` 则用来定义本地休眠状态的超时时间。
 >
@@ -208,7 +208,7 @@ socket.keepAlive(true, 10000); // 10秒
 
 ### 应用延时和非延时
 
-在发送 TCP 数据包之前，内核会缓冲数据，它使用 [Nagle 算法](https://baike.baidu.com/item/Nagle%E7%AE%97%E6%B3%95/5645172?fr=aladdin)决定何时实际发送数据。在应用程序发送小块数据时，该算法被用来减少通过网络发送的包的数量。取决于应用程序，该特性会变得十分有用，但它会导致延时发送数据， 这会增加应用程序的反应时间。
+在发送 TCP 数据包之前，内核会缓冲数据，它使用 [Nagle 算法](https://baike.baidu.com/item/Nagle算法/5645172?fr=aladdin)决定何时实际发送数据。在应用程序发送小块数据时，该算法被用来减少通过网络发送的包的数量。取决于应用程序，该特性会变得十分有用，但它会导致延时发送数据， 这会增加应用程序的反应时间。
 
 如果要使延时失效，在 write 命令之后强制数据立即被发送出去，可以调用如下所示的函数：
 
@@ -232,7 +232,7 @@ var host = '0.0.0.0';
 server.listen(port, host);
 ```
 
-第二个参数(host)是可选的，如果忽略该参数，则服务器将会接受指向任意IP地址的连接：
+第二个参数\(host\)是可选的，如果忽略该参数，则服务器将会接受指向任意IP地址的连接：
 
 ```js
 server.listen(port);
@@ -250,7 +250,7 @@ server.on('close', function () {
 });
 ```
 
-> **[info] 「编者注」：** 
+> **\[info\] 「编者注」：**
 >
 > 使用 `server.close()` 函数关闭服务器之后，服务器只是不再接受新的连接，而之前的已经建立的连接仍然有效，仍然可以与服务器正常通信。
 
@@ -258,7 +258,7 @@ server.on('close', function () {
 
 在处理客户端上的套接字或者服务器时，可以（也应该）通过监听 `'error'` 事件来处理错误，如下所示：
 
-```js 
+```js
 require('net').createServer(function (socket) {
     socket.on('error', function (err) {
         // do something
@@ -268,14 +268,19 @@ require('net').createServer(function (socket) {
 
 当出现错误时，如果未能捕获错误，那么 Node 会处理一个未捕获异常，并终止当前进程。
 
-> **[info] 注意：**
+> **\[info\] 注意：**
 >
 > 未捕获的异常会触发 `'uncaughtException'`事件，因此可以通过`process`监听此事件来进行处理：
+>
+> ```js
+> process.on('uncaughtException', function (err) {
+>     // do something
+> });
+> ```
+>
+> 但是，这样做通常不是一个好主意，因为当出现异常而你又未能对其进行适当地处理时，应用程序就会陷入一种未知状态，这种未知状态也许在后面会l导致更多更危险的错误此外，错误本身也会引起更多错误，导致难以理解错I 误根源。如果按照上述方法处理，可能还会泄露内存或资源（例如文件描述符），因为错误在该被处理时却没有得到处理。
 
-```js
-process.on('uncaughtException', function (err) {
-    // do something
-});
-```
 
-但是，这样做通常不是一个好主意，因为当出现异常而你又未能对其进行适当地处理时，应用程序就会陷入一种未知状态，这种未知状态也许在后面会l导致更多更危险的错误此外，错误本身也会引起更多错误，导致难以理解错I 误根源。如果按照上述方法处理，可能还会泄露内存或资源（例如文件描述符），因为错误在该被处理时却没有得到处理。
+
+
+
