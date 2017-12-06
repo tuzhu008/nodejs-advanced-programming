@@ -1,0 +1,809 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>第 9 章： 读写数据流 · Node.js高级编程</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="tuzhu008">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchor-navigation-ex/style/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-alerts/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism-atom-dark.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+
+        
+    
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../tcpServer/" />
+    
+    
+    <link rel="prev" href="../process/" />
+    
+
+    
+        <link rel="shortcut icon" href='../assets/images/favicon.ico' type="image/x-icon">
+    
+    
+        <link rel="bookmark" href='../assets/images/favicon.ico' type="image/x-icon">
+    
+    
+        <link rel="apple-touch-icon" href='../assets/images/apple-touch-icon.png'>
+    
+    
+        
+        <link rel="apple-touch-icon" sizes="120x120" href="../assets/images/apple-touch-icon-120x120.png">
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon-180x180.png">
+        
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    关于本书
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第 Ⅰ 部分 概述和安装</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="../installation/">
+            
+                <a href="../installation/">
+            
+                    
+                    第1章： 安装Node
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="../intro.html">
+            
+                <a href="../intro.html">
+            
+                    
+                    第2章： Node简介
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第 Ⅱ 部分 Node 核心API基础</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="../loadModule/">
+            
+                <a href="../loadModule/">
+            
+                    
+                    第3章： 加载模块
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="../Buffer/">
+            
+                <a href="../Buffer/">
+            
+                    
+                    第4章： 应用缓冲区处理、编码和解码二进制数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="../EventEmmiter/">
+            
+                <a href="../EventEmmiter/">
+            
+                    
+                    第5章： 使用事件发射器模式简化事件绑定
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="../Timers/">
+            
+                <a href="../Timers/">
+            
+                    
+                    第6章： 使用定时器制定函数执行计划
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第 Ⅲ 部分 Node 核心API基础</li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="../fs/">
+            
+                <a href="../fs/">
+            
+                    
+                    第 7 章：查询和读写文件
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="../process/">
+            
+                <a href="../process/">
+            
+                    
+                    第 8 章： 创建和控制外部进程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="4.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    第 9 章： 读写数据流
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="../tcpServer/">
+            
+                <a href="../tcpServer/">
+            
+                    
+                    第10章： 构建TCP服务器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.5" data-path="../httpServer/">
+            
+                <a href="../httpServer/">
+            
+                    
+                    第11章： 构建HTTP服务器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.6" data-path="../tcpClient/">
+            
+                <a href="../tcpClient/">
+            
+                    
+                    第12章： 构建TCP客户端
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.7" data-path="../httpRequest/">
+            
+                <a href="../httpRequest/">
+            
+                    
+                    第13章： 创建HTTP请求
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.8" data-path="../UDP/">
+            
+                <a href="../UDP/">
+            
+                    
+                    第14章： 使用用户数据报
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.9" data-path="../TSL_SSL/">
+            
+                <a href="../TSL_SSL/">
+            
+                    
+                    第15章： 使用TLS/SSL保证服务器的安全性
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.10" data-path="../HTTPS/">
+            
+                <a href="../HTTPS/">
+            
+                    
+                    第16章： 使用HTTPS保证HTTP服务器的安全性
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >第 9 章： 读写数据流</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div id="anchor-navigation-ex-navbar"><i class="fa fa-anchor"></i><ul><li><span class="title-icon "></span><a href="#&#x8BFB;&#x5199;&#x6570;&#x636E;&#x6D41;"><b>1. </b>&#x8BFB;&#x5199;&#x6570;&#x636E;&#x6D41;</a></li><ul><li><span class="title-icon "></span><a href="#&#x4F7F;&#x7528;&#x53EF;&#x8BFB;&#x6D41;"><b>1.1. </b>&#x4F7F;&#x7528;&#x53EF;&#x8BFB;&#x6D41;</a></li><ul><li><span class="title-icon "></span><a href="#&#x7B49;&#x5F85;&#x6570;&#x636E;"><b>1.1.1. </b>&#x7B49;&#x5F85;&#x6570;&#x636E;</a></li><li><span class="title-icon "></span><a href="#&#x6682;&#x505C;&#x4E0E;&#x6062;&#x590D;&#x6D41;"><b>1.1.2. </b>&#x6682;&#x505C;&#x4E0E;&#x6062;&#x590D;&#x6D41;</a></li><li><span class="title-icon "></span><a href="#&#x4E86;&#x89E3;&#x6D41;&#x4F55;&#x65F6;&#x7EC8;&#x6B62;"><b>1.1.3. </b>&#x4E86;&#x89E3;&#x6D41;&#x4F55;&#x65F6;&#x7EC8;&#x6B62;</a></li></ul><li><span class="title-icon "></span><a href="#&#x4F7F;&#x7528;&#x53EF;&#x5199;&#x6D41;"><b>1.2. </b>&#x4F7F;&#x7528;&#x53EF;&#x5199;&#x6D41;</a></li><ul><li><span class="title-icon "></span><a href="#&#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;&#x53EF;&#x5199;&#x6D41;"><b>1.2.1. </b>&#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;&#x53EF;&#x5199;&#x6D41;</a></li><li><span class="title-icon "></span><a href="#&#x7B49;&#x5F85;&#x6D41;&#x88AB;&#x6E05;&#x7A7A;"><b>1.2.2. </b>&#x7B49;&#x5F85;&#x6D41;&#x88AB;&#x6E05;&#x7A7A;</a></li></ul><li><span class="title-icon "></span><a href="#&#x8003;&#x8651;&#x51E0;&#x4E2A;&#x6D41;&#x7684;&#x4F8B;&#x5B50;"><b>1.3. </b>&#x8003;&#x8651;&#x51E0;&#x4E2A;&#x6D41;&#x7684;&#x4F8B;&#x5B50;</a></li><ul><li><span class="title-icon "></span><a href="#&#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6D41;"><b>1.3.1. </b>&#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6D41;</a></li><li><span class="title-icon "></span><a href="#&#x7406;&#x89E3;&#x7F51;&#x7EDC;&#x6D41;"><b>1.3.2. </b>&#x7406;&#x89E3;&#x7F51;&#x7EDC;&#x6D41;</a></li></ul><li><span class="title-icon "></span><a href="#&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4EE5;&#x53CA;&#x633D;&#x6551;&#x670D;&#x52A1;&#x5668;"><b>1.4. </b>&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4EE5;&#x53CA;&#x633D;&#x6551;&#x670D;&#x52A1;&#x5668;</a></li><ul><li><span class="title-icon "></span><a href="#&#x7406;&#x89E3;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;"><b>1.4.1. </b>&#x7406;&#x89E3;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;</a></li><li><span class="title-icon "></span><a href="#&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;"><b>1.4.2. </b>&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;</a></li><li><span class="title-icon "></span><a href="#&#x5E94;&#x7528;-streampipe&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4E0E;&#x4F7F;&#x7528;-pipe-&#x96C6;&#x6210;&#x53EF;&#x8BFB;&#x6D41;&#x548C;&#x53EF;&#x5199;&#x6D41;"><b>1.4.3. </b>&#x5E94;&#x7528; stream.pipe()&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4E0E;&#x4F7F;&#x7528; pipe() &#x96C6;&#x6210;&#x53EF;&#x8BFB;&#x6D41;&#x548C;&#x53EF;&#x5199;&#x6D41;</a></li></ul><li><span class="title-icon "></span><a href="#&#x672C;&#x7AE0;&#x5C0F;&#x7ED3;"><b>1.5. </b>&#x672C;&#x7AE0;&#x5C0F;&#x7ED3;</a></li></ul></ul></div><a href="#&#x8BFB;&#x5199;&#x6570;&#x636E;&#x6D41;" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><h1 id="&#x8BFB;&#x5199;&#x6570;&#x636E;&#x6D41;"><a name="&#x8BFB;&#x5199;&#x6570;&#x636E;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x8BFB;&#x5199;&#x6570;&#x636E;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1. &#x8BFB;&#x5199;&#x6570;&#x636E;&#x6D41;</h1>
+<p><strong>&#x672C;&#x7AE0;&#x63D0;&#x8981;&#xFF1A;</strong></p>
+<ul>
+<li><p>&#x6D41;&#x63A5;&#x53E3;&#x7B80;&#x4ECB;</p>
+</li>
+<li><p>&#x4ECE;&#x53EF;&#x8BFB;&#x6D41;&#x83B7;&#x53D6;&#x6570;&#x636E;</p>
+</li>
+<li><p>&#x63A7;&#x5236;&#x53EF;&#x8BFB;&#x6D41;&#x7684;&#x6D41;&#x52A8;</p>
+</li>
+<li><p>&#x5411;&#x53EF;&#x5199;&#x6D41;&#x5199;&#x5165;&#x6570;&#x636E;</p>
+</li>
+<li><p>&#x89E3;&#x51B3;&#x6162;&#x901F;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;</p>
+</li>
+<li><p>&#x4F7F;&#x7528;&#x7BA1;&#x9053;&#x5C06;&#x4E24;&#x79CD;&#x6D41;&#x6DF7;&#x5408;&#x5728;&#x4E00;&#x8D77;</p>
+</li>
+</ul>
+<p>Node &#x4E2D;&#x6709;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#x6982;&#x5FF5;&#xFF1A;<strong>&#x300E;&#x6D41;&#x300F;</strong>&#x3002;&#x66F4;&#x4E3A;&#x7279;&#x522B;&#x7684;&#x662F;&#x4E24;&#x4E2A;&#x975E;&#x5E38;&#x6709;&#x7528;&#x7684;&#x62BD;&#x8C61;&#x6982;&#x5FF5;&#xFF1A;<strong>&#x300E;&#x53EF;&#x8BFB;&#x6D41;&#x300F;</strong>&#x548C;&#x300E;&#x53EF;&#x5199;&#x6D41;&#x3002;&#x5B83;&#x4EEC;&#x662F;&#x901A;&#x8FC7;&#x51E0;&#x4E2A; Node &#x5BF9;&#x8C61;&#x6765;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;&#x4EE3;&#x8868;&#x6570;&#x636E;&#x7684;&#x5411;&#x5185;&#x6D41;&#x52A8;&#xFF08;&#x53EF;&#x8BFB;&#x6D41;&#xFF09;&#x4E0E;&#x5411;&#x5916;&#x6D41;&#x52A8;&#xFF08;&#x53EF;&#x5199;&#x6D41;&#xFF09;&#x3002;&#x6D41;&#x7684;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;&#x662F; TCP &#x5957;&#x63A5;&#x5B57;&#xFF0C;&#x53EF;&#x4EE5;&#x5728;&#x5176;&#x4E0A;&#x8FDB;&#x884C;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;&#xFF0C;&#x6D41;&#x7684;&#x53E6;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;&#x662F;&#x6587;&#x4EF6;&#xFF0C;&#x53EF;&#x4EE5;&#x5BF9;&#x5176;&#x6309;&#x987A;&#x5E8F;&#x8FDB;&#x884C;&#x8FFD;&#x52A0;&#x548C;&#x8BFB;&#x53D6;&#x3002;&#x4F60;&#x5DF2;&#x7ECF;&#x548C;&#x5B83;&#x4EEC;&#x4E2D;&#x7684;&#x4E00;&#x4E9B;&#x6210;&#x5458;&#x89C1;&#x8FC7;&#x9762;&#x4E86;&#xFF0C; &#x4F46;&#x672C;&#x7AE0;&#x5C06;&#x4EE5;&#x4E00;&#x79CD;&#x66F4;&#x4E3A;&#x6B63;&#x5F0F;&#x548C;&#x62BD;&#x8C61;&#x7684;&#x65B9;&#x5F0F;&#x4ECB;&#x7ECD;&#x5B83;&#x4EEC;&#xFF0C; &#x4E3A;&#x4E00;&#x4E9B;&#x66F4;&#x5177;&#x4F53;&#x7684;&#x4F8B;&#x5B50;&#x505A;&#x597D;&#x51C6;&#x5907;&#x3002;</p>
+<blockquote>
+<p><strong>[info] &#x6CE8;&#x610F;&#xFF1A;</strong></p>
+<p>&#x6D41;&#x662F;&#x7531;&#x51E0;&#x4E2A; Node &#x5BF9;&#x8C61;&#x5B9E;&#x73B0;&#x7684;&#x62BD;&#x8C61;&#x6982;&#x5FF5;&#xFF0C;&#x521B;&#x5EFA;&#x6216;&#x8005;&#x83B7;&#x53D6;&#x6D41;&#x7684;&#x65B9;&#x5F0F;&#x53D6;&#x51B3;&#x4E8E;&#x4F7F;&#x7528;&#x6D41;&#x7684;&#x7C7B;&#x578B;&#x3002;&#x4F8B;&#x5982;&#xFF0C; &#x53EF;&#x4EE5;&#x57FA;&#x4E8E;&#x6587;&#x4EF6;&#x663E;&#x5F0F;&#x5730;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x53EF;&#x8BFB;&#x6D41;&#x6216;&#x8005;&#x53EF;&#x5199;&#x6D41;&#x3002;&#x4F46;&#x662F;&#xFF0C;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x7684;TCP &#x5957;&#x63A5;&#x5B57;&#x6D41;&#x53EA;&#x6709;&#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;&#x65F6;&#x624D;&#x80FD;&#x4E3A;&#x4F60;&#x6240;&#x7528;&#x3002;</p>
+<p>&#x9664;&#x4E86;&#x53EF;&#x8BFB;&#x6D41;&#x6216;&#x53EF;&#x5199;&#x6D41;&#x7684;&#x7279;&#x6027;&#x5916;&#xFF0C; &#x4E00;&#x4E2A;&#x5BF9;&#x8C61;&#x8FD8;&#x53EF;&#x4EE5;&#x5177;&#x6709;&#x5176;&#x4ED6;&#x4E00;&#x4E9B;&#x7279;&#x6B8A;&#x7684;&#x5C5E;&#x6027;&#x6216;&#x884C;&#x4E3A;&#x3002;&#x4F8B;&#x5982;&#xFF0C; &#x6587;&#x4EF6;&#x53EF;&#x8BFB;&#x6D41;&#x8FD8;&#x5305;&#x542B;&#x201C;&#x8DEF;&#x5F84;&#x201D; &#x5C5E;&#x6027;&#xFF0C; &#x800C;&#x8FD9;&#x4E00;&#x5C5E;&#x6027;&#x5728;&#x5176;&#x4ED6;&#x7C7B;&#x578B;&#x7684;&#x6D41;&#x4E2D;&#x4E5F;&#x8BB8;&#x5E76;&#x4E0D;&#x5B58;&#x5728;&#x3002;</p>
+</blockquote>
+<h2 id="&#x4F7F;&#x7528;&#x53EF;&#x8BFB;&#x6D41;"><a name="&#x4F7F;&#x7528;&#x53EF;&#x8BFB;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x4F7F;&#x7528;&#x53EF;&#x8BFB;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1.1. &#x4F7F;&#x7528;&#x53EF;&#x8BFB;&#x6D41;</h2>
+<p>&#x53EF;&#x8BFB;&#x6D41;&#x5C31;&#x597D;&#x50CF;&#x662F;&#x4E2A;&#x6570;&#x636E;&#x9600;&#x95E8;&#x3002;&#x5728;&#x521B;&#x5EFA;&#x6216;&#x8005;&#x83B7;&#x53D6;&#x4E2A;&#x53EF;&#x8BFB;&#x6D41;&#x4E4B;&#x540E;&#xFF08;&#x521B;&#x5EFA;&#x6216;&#x8005;&#x83B7;&#x53D6;&#x53EF;&#x8BFB;&#x6D41;&#x7684;&#x65B9;&#x6CD5;&#x53D6;&#x51B3;&#x4E8E;&#x6D41;&#x7684;&#x7C7B;&#x578B;&#xFF09;&#x53EF;&#x4EE5;&#x5BF9;&#x5176;&#x8FDB;&#x884C;&#x63A7;&#x5236;&#x3002;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x6682;&#x505C;&#x548C;&#x6062;&#x590D;&#x6765;&#x63A7;&#x5236;&#x6570;&#x636E;&#x6D41;&#x52A8;&#xFF0C; &#x53EF;&#x4EE5;&#x5728;&#x6570;&#x636E;&#x53EF;&#x7528;&#x65F6;&#x5F97;&#x5230;&#x901A;&#x77E5;&#xFF0C;&#x5E76;&#x4E14;&#x5728;&#x6D41;&#x7EC8;&#x6B62;&#x65F6;&#x4F60;&#x4E5F;&#x4F1A;&#x5F97;&#x5230;&#x901A;&#x77E5;&#x5E76;&#x80FD;&#x591F;&#x5173;&#x95ED;&#x5B83;&#x3002;</p>
+<h3 id="&#x7B49;&#x5F85;&#x6570;&#x636E;"><a name="&#x7B49;&#x5F85;&#x6570;&#x636E;" class="anchor-navigation-ex-anchor" href="#&#x7B49;&#x5F85;&#x6570;&#x636E;"><i class="fa fa-link" aria-hidden="true"></i></a>1.1.1. &#x7B49;&#x5F85;&#x6570;&#x636E;</h3>
+<p>&#x6D41;&#x80FD;&#x591F;&#x4EE5;&#x300C;&#x5757;&#x300D;&#x4E3A;&#x5355;&#x4F4D;&#x53D1;&#x9001;&#x6570;&#x636E;&#x3002;&#x901A;&#x8FC7;&#x76D1;&#x542C; <code>&quot;data&quot;</code> &#x4E8B;&#x4EF6;&#xFF0C;&#x5728;&#x6D41;&#x6BCF;&#x6B21;&#x63D0;&#x4EA4;&#x5757;&#x6570;&#x636E;&#x65F6;&#xFF0C;&#x4F60;&#x90FD;&#x4F1A;&#x5F97;&#x5230;&#x901A;&#x77E5;&#x3002;&#x53EF;&#x4EE5;&#x4EE5;&#x300C;&#x7F13;&#x51B2;&#x533A;&#x300D;&#x6216;&#x300C;&#x5B57;&#x7B26;&#x4E32;&#x300D;&#x7684;&#x5F62;&#x5F0F;&#x83B7;&#x53D6;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x53D6;&#x51B3;&#x4E8E;&#x6D41;&#x7684;&#x7F16;&#x7801;&#x8BBE;&#x7F6E;&#x3002;</p>
+<p>&#x901A;&#x8FC7;&#x7ED1;&#x5B9A;&#x5230; <code>&quot;data&quot;</code> &#x4E8B;&#x4EF6;&#x4E0A;&#x7684;&#x4E8B;&#x4EF6;&#x5904;&#x7406;&#x7A0B;&#x5E8F;&#x53EF;&#x4EE5;&#x4F20;&#x9001;&#x6570;&#x636E;&#x3002; &#x6839;&#x636E;&#x6D41;&#x7684;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#xFF0C;&#x4E5F;&#x8BB8;&#x4F1A;&#x7528;&#x5B57;&#x8282;&#x7F13;&#x51B2;&#x533A;&#x4EE5;&#x539F;&#x59CB;&#x5F62;&#x5F0F;&#x4F20;&#x9001;&#x6570;&#x636E;&#xFF0C;&#x6216;&#x8005;&#xFF0C;&#x5982;&#x679C;&#x7528; <code>stream.setEncoding()</code> &#x51FD;&#x6570;&#x5B9A;&#x4E49;&#x4E86;&#x6D41;&#x7684;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#xFF0C; &#x6570;&#x636E;&#x5C31;&#x4F1A;&#x4EE5;&#x67D0;&#x79CD;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x7684;&#x5B57;&#x7B26;&#x4E32;&#x5F62;&#x5F0F;&#x8FDB;&#x884C;&#x4F20;&#x9001;&#xFF0C; &#x5982;&#x4E0B;&#x9762;&#x4E24;&#x4E2A;&#x4F8B;&#x5B50;&#x6240;&#x793A;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token comment" spellcheck="true">// &#x53EF;&#x8BFB;&#x6D41;1</span>
+<span class="token keyword">var</span> readable_stream1 <span class="token operator">=</span> <span class="token operator">...</span> 
+readable_streaml<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;data&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// &#x6570;&#x636E;&#x662F;&#x7F13;&#x51B2;&#x533A;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&apos;got this data: &apos;</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// &#x53EF;&#x8BFB;&#x6D41;2</span>
+<span class="token keyword">var</span> readable_stream2 <span class="token operator">=</span> <span class="token operator">...</span>
+<span class="token comment" spellcheck="true">// &#x8BBE;&#x7F6E;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x4E3A; utf8 </span>
+readable_stream2<span class="token punctuation">.</span><span class="token function">setEncoding</span><span class="token punctuation">(</span><span class="token string">&apos;uft8&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+readable_stream2<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;data&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// &#x6570;&#x636E;&#x662F; utf-8 &#x7F16;&#x7801;&#x7684;&#x5B57;&#x7B26;&#x4E32;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&apos;got this data: &apos;</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5728;&#x7B2C;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;&#x4E2D;&#xFF0C;&#x56E0;&#x4E3A;&#x6CA1;&#x6709;&#x6307;&#x5B9A;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#xFF0C;&#x6240;&#x4EE5;&#x6570;&#x636E;&#x662F;&#x4F5C;&#x4E3A;&#x7F13;&#x51B2;&#x533A;&#x4F20;&#x9001;&#x7684;&#x3002;&#x5728;&#x7B2C;&#x4E8C;&#x4E2A;&#x4F8B;&#x5B50;&#x4E2D;&#xFF0C;&#x6570;&#x636E;&#x662F;&#x4F5C;&#x4E3A; utf-8 &#x7F16;&#x7801;&#x683C;&#x5F0F;&#x7684;&#x5B57;&#x7B26;&#x4E32;&#x4F20;&#x9001;&#x7684;&#x3002;</p>
+<blockquote>
+<p><strong>[info] &#x6CE8;&#x610F;</strong></p>
+<p>&#x56E0;&#x4E3A; UTF-8 &#x5B57;&#x7B26;&#x53EF;&#x80FD;&#x662F;&#x591A;&#x5B57;&#x8282;&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x5F53;&#x4F60;&#x5E0C;&#x671B;&#x83B7;&#x53D6; UTF-8 &#x5B57;&#x7B26;&#x65F6;&#xFF0C;&#x4E5F;&#x8BB8;&#x9700;&#x8981;&#x5728;&#x4E24;&#x4E2A;&#x72EC;&#x7ACB;&#x7684; &#x201C;data&#x201D; &#x4E8B;&#x4EF6;&#x53D1;&#x751F;&#x4E4B;&#x540E;&#x624D;&#x80FD;&#x83B7;&#x5F97;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#xFF0C;&#x5F53;&#x4F60;&#x5C06;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x8BBE;&#x7F6E;&#x4E3A; utf8 &#x65F6;&#xFF0C;&#x6D41;&#x4EC5;&#x4F1A;&#x5728;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#x5B8C;&#x6574;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x4F20;&#x9001;&#x5B83;&#x3002;</p>
+</blockquote>
+<h3 id="&#x6682;&#x505C;&#x4E0E;&#x6062;&#x590D;&#x6D41;"><a name="&#x6682;&#x505C;&#x4E0E;&#x6062;&#x590D;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x6682;&#x505C;&#x4E0E;&#x6062;&#x590D;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1.1.2. &#x6682;&#x505C;&#x4E0E;&#x6062;&#x590D;&#x6D41;</h3>
+<p>&#x53EF;&#x8BFB;&#x6D41;&#x5C31;&#x50CF;&#x4E00;&#x4E2A;&#x9600;&#x95E8;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x6682;&#x505C;&#x6765;&#x963B;&#x6B62;&#x6570;&#x636E;&#x6D41;&#x52A8;&#x3002;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js">stream<span class="token punctuation">.</span><span class="token function">pause</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x6267;&#x884C;&#x4E0A;&#x9762;&#x7684;&#x4EE3;&#x7801;&#x4E4B;&#x540E;&#xFF0C; &#x5C31;&#x518D;&#x4E5F;&#x4E0D;&#x4F1A;&#x63A5;&#x6536;&#x5230; <code>&quot;data&quot;</code> &#x4E8B;&#x4EF6;&#x4E86;&#x3002; &#x6B63;&#x5982;&#x8BFB;&#x8005;&#x5C06;&#x5728;&#x540E;&#x9762;&#x770B;&#x5230;&#x7684;&#x90A3;&#x6837;&#xFF0C;&#x8FD9;&#x4E2A;&#x7279;&#x6027;&#x53EF;&#x4EE5;&#x5E2E;&#x4F60;&#x89C4;&#x907F;&#x9690;&#x542B;&#x7F13;&#x51B2;&#x533A;&#x3002;</p>
+<blockquote>
+<p><strong>[info] &#x6CE8;&#x610F;&#xFF1A;</strong></p>
+<p>&#x6682;&#x505C;&#x6D41;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x4F1A;&#x88AB;&#x89E3;&#x91CA;&#x6210;&#x4E0D;&#x540C;&#x7684;&#x884C;&#x4E3A;&#x3002;&#x4F8B;&#x5982;&#xFF0C;&#x5982;&#x679C;&#x662F;&#x4E2A;&#x6587;&#x4EF6;&#x6D41;&#xFF0C;Node &#x5C31;&#x4F1A;&#x505C;&#x6B62;&#x4ECE;&#x8BE5;&#x6587;&#x4EF6;&#x4E2D;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#x3002;&#x5982;&#x679C;&#x6D41;&#x662F;&#x4E00;&#x4E2A;TCP &#x5957;&#x63A5;&#x5B87;&#xFF0C;Node &#x5C31;&#x4E0D;&#x518D;&#x4F1A;&#x8BFB;&#x53D6;&#x65B0;&#x7684;&#x6570;&#x636E;&#x5305;&#xFF0C;&#x8FD9;&#x4F1A;&#x7EC8;&#x6B62;&#x4ECE;&#x5176;&#x4ED6;&#x7EC8;&#x7AEF;&#x6765;&#x7684;&#x6570;&#x636E;&#x5305;&#x6D41;&#x3002; &#x5176;&#x4ED6;&#x5BF9;&#x8C61;&#x5BF9; pause &#x7684;&#x5B9E;&#x73B0;&#x5404;&#x4E0D;&#x76F8;&#x540C;&#x3002;</p>
+</blockquote>
+<p>&#x5F53;&#x60F3;&#x6062;&#x590D;&#x88AB;&#x6682;&#x505C;&#x7684;&#x6D41;&#x65F6;&#xFF0C;&#x53EA;&#x9700;&#x8981;&#x8C03;&#x7528; <code>stream.resume()</code> &#x65B9;&#x6CD5;&#xFF0C;&#x5C31;&#x4F1A;&#x91CD;&#x65B0;&#x6253;&#x5F00;&#x9600;&#x95E8;&#xFF0C;&#x6570;&#x636E;&#x4E5F;&#x5C31;&#x518D;&#x6B21;&#x88AB;&#x4F20;&#x9001;&#x51FA;&#x6765;&#xFF0C;&#x76F4;&#x5230;&#x518D;&#x6B21;&#x6682;&#x505C;&#x6D41;&#x6216;&#x8005;&#x6D41;&#x7EC8;&#x6B62;&#x4E3A;&#x6B62;&#x3002;</p>
+<h3 id="&#x4E86;&#x89E3;&#x6D41;&#x4F55;&#x65F6;&#x7EC8;&#x6B62;"><a name="&#x4E86;&#x89E3;&#x6D41;&#x4F55;&#x65F6;&#x7EC8;&#x6B62;" class="anchor-navigation-ex-anchor" href="#&#x4E86;&#x89E3;&#x6D41;&#x4F55;&#x65F6;&#x7EC8;&#x6B62;"><i class="fa fa-link" aria-hidden="true"></i></a>1.1.3. &#x4E86;&#x89E3;&#x6D41;&#x4F55;&#x65F6;&#x7EC8;&#x6B62;</h3>
+<p>&#x6D41;&#x4F1A;&#x7EC8;&#x6B62;&#x3002;&#x4F8B;&#x5982;&#xFF0C;&#x5982;&#x679C;&#x7528;&#x4E00;&#x4E2A;&#x53EF;&#x8BFB;&#x6D41;&#x6765;&#x4F20;&#x9001;&#x6587;&#x4EF6;&#x7684;&#x5185;&#x5BB9;&#xFF0C;&#x5F53;&#x5230;&#x8FBE;&#x6587;&#x4EF6;&#x7ED3;&#x675F;&#x4F4D;&#x7F6E;&#x65F6;&#xFF0C;&#x6D41;&#x4F1A;&#x53D1;&#x9001; <code>&quot;end&quot;</code> &#x4E8B;&#x4EF6;&#x3002;&#x7C7B;&#x4F3C;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x7528;&#x4E00;&#x4E2A; HTTP &#x6D41;&#x4F20;&#x9001;&#x8BF7;&#x6C42;&#x4E3B;&#x4F53;&#xFF0C;&#x6D41;&#x4E5F;&#x4F1A;&#x53D1;&#x9001; <code>&quot;end&quot;</code> &#x4E8B;&#x4EF6;&#x3002;&#x53EF;&#x4EE5;&#x50CF;&#x4E0B;&#x9762;&#x8FD9;&#x6837;&#x76D1;&#x542C; <code>&quot;end&quot;</code> &#x4E8B;&#x4EF6;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> readable_stream <span class="token operator">=</span> <span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span> 
+readable_stream<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;end&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&apos;the stream has ended&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">,</span>
+</code></pre>
+<p>&#x53EF;&#x8BFB;&#x6D41;&#x7EC8;&#x6B62;&#x540E;&#xFF0C; &#x4F60;&#x5C31;&#x518D;&#x4E5F;&#x63A5;&#x6536;&#x4E0D;&#x5230; <code>&quot;data&quot;</code> &#x4E8B;&#x4EF6;&#x4E86;&#x3002;</p>
+<h2 id="&#x4F7F;&#x7528;&#x53EF;&#x5199;&#x6D41;"><a name="&#x4F7F;&#x7528;&#x53EF;&#x5199;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x4F7F;&#x7528;&#x53EF;&#x5199;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1.2. &#x4F7F;&#x7528;&#x53EF;&#x5199;&#x6D41;</h2>
+<p>&#x53EF;&#x5199;&#x6D41;&#x662F;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#x6982;&#x5FF5;&#xFF0C;&#x53EF;&#x4EE5;&#x5411;&#x5176;&#x53D1;&#x9001;&#x6570;&#x636E;&#x3002;&#x5B83;&#x53EF;&#x80FD;&#x662F;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C;&#x6216;&#x5219;&#x662F;&#x4E00;&#x4E2A; TCP &#x7F51;&#x7EDC;&#x8FDE;&#x63A5;&#xFF0C;&#x751A;&#x81F3;&#x53EF;&#x80FD;&#x662F;&#x4E00;&#x4E2A;&#x5BF9;&#x8C61;&#xFF0C;&#x7528;&#x6765;&#x8F93;&#x51FA;&#x88AB;&#x8F6C;&#x6362;&#x7684;&#x6570;&#x636E;&#x3002;&#x4F8B;&#x5982;&#xFF0C;&#x538B;&#x7F29;&#x6587;&#x4EF6;&#x3002;&#x672C;&#x8282;&#x5C06;&#x5B66;&#x4E60;&#x5411;&#x53EF;&#x5199;&#x6D41;&#x5199;&#x5165;&#x6570;&#x636E;&#x548C;&#x6E05;&#x7A7A;&#x4E8B;&#x4EF6;&#x3002;</p>
+<h3 id="&#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;&#x53EF;&#x5199;&#x6D41;"><a name="&#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;&#x53EF;&#x5199;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;&#x53EF;&#x5199;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1.2.1. &#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;&#x53EF;&#x5199;&#x6D41;</h3>
+<p>&#x901A;&#x8FC7;&#x5411;&#x53EF;&#x5199;&#x6D41;&#x4F20;&#x5165;&#x7F13;&#x51B2;&#x533A;&#x6216;&#x8005;&#x5B57;&#x7B26;&#x4E32;&#xFF0C;&#x53EF;&#x4EE5;&#x5C06;&#x5B57;&#x7B26;&#x4E32;&#x5199;&#x5165;&#x5176;&#x4E2D;&#xFF0C;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> writeable_stream <span class="token operator">=</span> <span class="token operator">...</span><span class="token punctuation">;</span>
+writeable_stream<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">&apos;this is an UTF-8 string&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5982;&#x679C;&#x5C06;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#x4E32;&#x4F20;&#x9012;&#x7ED9; <code>write</code> &#x51FD;&#x6570;&#xFF0C;&#x4F5C;&#x4E3A;&#x7B2C;&#x4E00;&#x4E2A;&#x53C2;&#x6570;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x5C06;&#x5B57;&#x7B26;&#x4E32;&#x7684;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x4E5F;&#x4F20;&#x9012;&#x7ED9;&#x8BE5;&#x51FD;&#x6570;&#xFF0C;&#x4F5C;&#x4E3A;&#x7B2C;&#x4E8C;&#x4E2A;&#x53C2;&#x6570;&#x3002;&#x5426;&#x5219;&#xFF0C;&#x6D41;&#x4F1A;&#x5047;&#x5B9A;&#x5B57;&#x7B26;&#x4E32;&#x91C7;&#x7528;&#x7684;&#x662F; UTF-8 &#x7F16;&#x7801;&#x3002;</p>
+<p>&#x4E0B;&#x9762;&#x662F;&#x4E00;&#x4E2A;&#x5411; <code>write</code> &#x51FD;&#x6570;&#x4F20;&#x5165;&#x53E6;&#x4E00;&#x79CD;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x7684;&#x4F8B;&#x5B50;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js">
+<span class="token keyword">var</span> writable_stream<span class="token punctuation">.</span> <span class="token operator">=</span> <span class="token operator">...</span> <span class="token punctuation">;</span> 
+writable_stream<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">&apos;7e3e4acde5ad240a8ef5e7 31e644fbdl&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;base64&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5982;&#x524D;&#x6240;&#x8FF0;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x5411; <code>write</code> &#x51FD;&#x6570;&#x4F20;&#x5165;&#x7F13;&#x51B2;&#x533A;&#x6765;&#x5199;&#x5165;&#x6570;&#x636E;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> writeable_stream <span class="token operator">=</span> <span class="token operator">...</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> buffer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Buffer</span><span class="token punctuation">(</span><span class="token string">&apos;this is a Buffer with some string&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+writeable_stream<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>buffer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x4E00;&#x65E6;&#x5411;&#x6D41;&#x5199;&#x5165;&#x6570;&#x636E;&#xFF0C;Node &#x53EF;&#x4EE5;&#x7ACB;&#x5373;&#x5C06;&#x6570;&#x636E;&#x4F20;&#x9012;&#x5230;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#xFF08; kernel buffer &#xFF09;&#x4E2D;&#xFF0C;&#x5982;&#x679C;&#x6B64;&#x65F6;&#x6CA1;&#x6709;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#xFF0C;Node &#x5C31;&#x4F1A;&#x5C06;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x5230;&#x4E00;&#x4E2A;&#x961F;&#x5217;&#x4E2D;&#xFF0C;&#x8FD9;&#x4E2A;&#x961F;&#x5217;&#x4F4D;&#x4E8E;&#x5185;&#x5B58;&#x4E2D;&#x3002;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x89C2;&#x5BDF;&#x8C03;&#x7528; <code>writeable_stream.write()</code> &#x51FD;&#x6570;&#x7684;&#x8FD4;&#x56DE;&#x503C;&#x786E;&#x5B9A;&#x53D1;&#x751F;&#x4E86;&#x4F55;&#x79CD;&#x4E8B;&#x4EF6;&#x3002;<code>write</code> &#x547D;&#x4EE4;&#x5C06;&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x5E03;&#x5C14;&#x503C;&#xFF0C;&#x5982;&#x679C;&#x6570;&#x636E;&#x88AB;&#x4F20;&#x9012;&#x5230;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#x4E2D;&#xFF0C;&#x8BE5;&#x503C;&#x4E3A;true&#xFF0C;&#x5982;&#x679C;&#x6570;&#x636E;&#x88AB;&#x5B58;&#x5165;&#x961F;&#x5217;&#x4E2D;&#xFF0C;&#x5219;&#x8BE5;&#x503C;&#x4E3A;false&#x3002;&#x5728;&#x672C;&#x8282;&#x7684;&#x540E;&#x9762;&#x5C06;&#x770B;&#x5230;&#x8BE5;&#x4FE1;&#x606F;&#x6709;&#x4F55;&#x5E2E;&#x52A9;&#x3002;</p>
+<h3 id="&#x7B49;&#x5F85;&#x6D41;&#x88AB;&#x6E05;&#x7A7A;"><a name="&#x7B49;&#x5F85;&#x6D41;&#x88AB;&#x6E05;&#x7A7A;" class="anchor-navigation-ex-anchor" href="#&#x7B49;&#x5F85;&#x6D41;&#x88AB;&#x6E05;&#x7A7A;"><i class="fa fa-link" aria-hidden="true"></i></a>1.2.2. &#x7B49;&#x5F85;&#x6D41;&#x88AB;&#x6E05;&#x7A7A;</h3>
+<p>&#x56E0;&#x4E3A; Node &#x4E0D;&#x4F1A;&#x5728; I/O &#x64CD;&#x4F5C;&#x4E0A;&#x4EA7;&#x751F;&#x963B;&#x585E;&#xFF0C;&#x6240;&#x4EE5;&#x5B83;&#x4E5F;&#x4E0D;&#x4F1A;&#x5728;&#x8BFB;&#x6216;&#x5199;&#x547D;&#x4EE4;&#x4E0A;&#x4EA7;&#x751F;&#x963B;&#x585E;&#x3002;&#x6B63;&#x5982;&#x5DF2;&#x7ECF;&#x770B;&#x5230;&#x7684;&#x90A3;&#x6837;&#xFF0C;&#x5728;&#x8C03;&#x7528;&#x5199;&#x547D;&#x4EE4;&#x65F6;&#x4F60;&#x4F1A;&#x77E5;&#x9053;&#x7F13;&#x51B2;&#x533A;&#x662F;&#x5426;&#x88AB;&#x7ACB;&#x5373;&#x5237;&#x65B0;&#xFF0C; &#x5982;&#x679C;&#x6CA1;&#x6709;&#x88AB;&#x5237;&#x65B0;&#xFF0C;&#x5C06;&#x5176;&#x5B58;&#x50A8;&#x5728;&#x8FDB;&#x7A0B;&#x5185;&#x5B58;&#x4E2D;&#x3002;</p>
+<p>&#x7A0D;&#x540E;&#x5F53;&#x6D41;&#x6210;&#x529F;&#x5237;&#x65B0;&#x6302;&#x8D77;&#x7684;&#x7F13;&#x51B2;&#x533A;&#x65F6;&#xFF0C;&#x5C31;&#x4F1A;&#x53D1;&#x5C04; <code>&quot;drain&quot;</code> &#x4E8B;&#x4EF6;&#xFF0C;&#x53EF;&#x4EE5;&#x76D1;&#x542C;&#x8BE5;&#x4E8B;&#x4EF6;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> writeable_strem <span class="token operator">=</span> <span class="token operator">...</span><span class="token punctuation">;</span>
+writeable_strem<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;drain&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&apos;drain emitted&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5728;&#x672C;&#x7AE0;&#x7684;&#x540E;&#x9762;&#x4F60;&#x5C06;&#x770B;&#x5230;&#x5177;&#x6709;&#x6682;&#x505C;&#x548C;&#x6062;&#x590D;&#x529F;&#x80FD;&#x7684;&#x6E05;&#x7A7A;&#x901A;&#x77E5;&#x5982;&#x4F55;&#x9650;&#x5236; Node &#x8FDB;&#x7A0B;&#x7684;&#x5185;&#x5B58;&#x589E;&#x957F;&#x3002;</p>
+<h2 id="&#x8003;&#x8651;&#x51E0;&#x4E2A;&#x6D41;&#x7684;&#x4F8B;&#x5B50;"><a name="&#x8003;&#x8651;&#x51E0;&#x4E2A;&#x6D41;&#x7684;&#x4F8B;&#x5B50;" class="anchor-navigation-ex-anchor" href="#&#x8003;&#x8651;&#x51E0;&#x4E2A;&#x6D41;&#x7684;&#x4F8B;&#x5B50;"><i class="fa fa-link" aria-hidden="true"></i></a>1.3. &#x8003;&#x8651;&#x51E0;&#x4E2A;&#x6D41;&#x7684;&#x4F8B;&#x5B50;</h2>
+<p>&#x5230;&#x76EE;&#x524D;&#x4E3A;&#x6B62;&#xFF0C;&#x5DF2;&#x7ECF;&#x4ECB;&#x7ECD;&#x4E86;&#x62BD;&#x8C61;&#x7684;&#x6D41;&#x63A5;&#x53E3;&#x3002;&#x4E0B;&#x9762;&#x6765;&#x770B;&#x770B;&#x51E0;&#x4E2A; Node &#x5B9E;&#x73B0;&#x6D41;&#x63A5;&#x53E3;&#x7684;&#x4F8B;&#x5B50;&#x3002;</p>
+<h3 id="&#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6D41;"><a name="&#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1.3.1. &#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6D41;</h3>
+<p>&#x53EF;&#x4EE5;&#x7528;&#x6587;&#x4EF6;&#x8DEF;&#x5F84;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x53EF;&#x8BFB;&#x6D41;&#xFF0C;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// &#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x65B0;&#x5EFA;&#x7684; ReadStream &#x5BF9;&#x8C61;</span>
+<span class="token keyword">var</span> rs <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span><span class="token string">&apos;/path/to/file&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// ...</span>
+</code></pre>
+<p>&#x53EF;&#x4EE5;&#x5411; <code>fs.createReadStream()</code> &#x51FD;&#x6570;&#x4F20;&#x9012;&#x7B2C;&#x4E8C;&#x4E2A;&#x53C2;&#x6570;&#xFF0C;&#x8FD9;&#x4E2A;&#x53C2;&#x6570;&#x5177;&#x6709;&#x51E0;&#x4E2A;&#x9009;&#x9879;&#xFF0C;&#x5728;&#x8FD9;&#x4E2A;&#x53C2;&#x6570;&#x4E2D;&#xFF0C;&#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x6587;&#x4EF6;&#x7684;&#x8D77;&#x59CB;&#x4F4D;&#x7F6E;&#x548C;&#x7ED3;&#x675F;&#x4F4D;&#x7F6E;&#x3001;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#x3001;&#x6807;&#x5FD7;&#x4F4D;&#x4EE5;&#x53CA;&#x7F13;&#x51B2;&#x533A;&#x5927;&#x5C0F;&#x3002;options &#x53C2;&#x6570;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</p>
+<ul>
+<li><p><code>flags</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#String_type" target="_blank">&lt;string&gt;</a>  &#x4E0E;<a href="../fs/">&#x7B2C; 7 &#x7AE0;</a> &#x6253;&#x5F00;&#x6587;&#x4EF6;&#x7684; <code>flag</code> &#x76F8;&#x540C;&#x3002;</p>
+</li>
+<li><p><code>encoding</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#String_type" target="_blank">&lt;string&gt;</a> <code>&quot;data&quot;</code> &#x4E8B;&#x4EF6;&#x53D1;&#x9001;&#x7684;&#x5B57;&#x7B26;&#x4E32;&#x7684;&#x7F16;&#x7801;&#x683C;&#x5F0F;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4F7F;&#x7528;&#x672A;&#x7ECF;&#x5904;&#x7406;&#x7684;&#x7F13;&#x51B2;&#x533A;&#xFF0C;&#x8BE5;&#x503C;&#x4E3A; null&#x3002;</p>
+</li>
+<li><code>fd</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type" target="_blank">&lt;integer&gt;</a> &#x5982;&#x679C;&#x6709;&#x4E00;&#x4E2A;&#x5DF2;&#x7ECF;&#x6253;&#x5F00;&#x7684;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#xFF0C;&#x5219;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x6B64;&#x9009;&#x9879;&#x4F20;&#x9012;&#x7ED9;&#x51FD;&#x6570;&#x3002;&#x9ED8;&#x8BA4;&#x4E3A;null&#x3002;&#x5982;&#x679C;&#x6307;&#x5B9A;&#x4E86;<code>fd</code>&#xFF0C;&#x5219;<code>ReadStream</code>&#x4F1A;&#x5FFD;&#x7565;<code>path</code>&#x53C2;&#x6570;&#x5E76;&#x4E14;&#x4F1A;&#x4F7F;&#x7528;&#x6307;&#x5B9A;&#x7684;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x3002;&#x8FD9;&#x610F;&#x5473;&#x7740;&#x4E0D;&#x4F1A;&#x89E6;&#x53D1;<code>&apos;open&apos;</code>&#x4E8B;&#x4EF6;&#x3002;</li>
+<li><code>mode</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type" target="_blank">&lt;integer&gt;</a>  &#x7528;&#x4E8E;&#x8BBE;&#x7F6E;&#x6587;&#x4EF6;&#x6A21;&#x5F0F;&#xFF08;&#x6743;&#x9650;&#x548C;&#x7C98;&#x7ED3;&#x4F4D;&#xFF09;&#xFF0C;&#x4F46;&#x4EC5;&#x9650;&#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x65F6;&#x3002;</li>
+<li><code>autoClose</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type" target="_blank">&lt;boolean&gt;</a> &#x5982;&#x679C;<code>autoClose</code>&#x4E3A;<code>false</code>&#xFF0C;&#x5219;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x4E0D;&#x4F1A;&#x88AB;&#x5173;&#x95ED;&#xFF0C;&#x5373;&#x4F7F;&#x6709;&#x9519;&#x8BEF;&#x3002; &#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x9700;&#x8981;&#x8D1F;&#x8D23;&#x5173;&#x95ED;&#x5B83;&#xFF0C;&#x5E76;&#x4E14;&#x786E;&#x4FDD;&#x6CA1;&#x6709;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x6CC4;&#x6F0F;&#x3002; &#x5982;&#x679C;<code>autoClose</code>&#x88AB;&#x8BBE;&#x7F6E;&#x4E3A;<code>true</code>&#xFF08;&#x9ED8;&#x8BA4;&#xFF09;&#xFF0C;&#x5219;&#x5728;<code>error</code>&#x6216;<code>end</code>&#x65F6;&#xFF0C;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x4F1A;&#x88AB;&#x81EA;&#x52A8;&#x5173;&#x95ED;&#x3002;</li>
+<li><code>start</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type" target="_blank">&lt;integer&gt;</a> &#x6587;&#x4EF6;&#x4E2D;&#x7B2C;&#x4E00;&#x4E2A;&#x88AB;&#x8BFB;&#x53D6;&#x7684;&#x5B57;&#x8282;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x7528;&#x6765;&#x8BFB;&#x53D6;&#x4E00;&#x5B9A;&#x8303;&#x56F4;&#x5185;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x8BFB;&#x53D6;&#x6587;&#x4EF6;&#x7684;&#x5168;&#x90E8;&#x6570;&#x636E;&#x3002;</li>
+<li><code>end</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type" target="_blank">&lt;integer&gt;</a> &#x6587;&#x4EF6;&#x4E2D;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x88AB;&#x8BFB;&#x53D6;&#x7684;&#x5B57;&#x8282;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x7528;&#x6765;&#x8BFB;&#x53D6;&#x4E00;&#x5B9A;&#x8303;&#x56F4;&#x5185;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x8BFB;&#x53D6;&#x6587;&#x4EF6;&#x7684;&#x5168;&#x90E8;&#x6570;&#x636E;&#x3002;</li>
+</ul>
+<blockquote>
+<p><strong>[info] &#x6CE8;&#x610F;&#xFF1A;</strong></p>
+<p>&#x5982;&#x679C;&#x5DF2;&#x7ECF;&#x6709;&#x4E86;&#x4E00;&#x4E2A;&#x6253;&#x5F00;&#x7684;&#x6587;&#x4EF6;&#xFF0C;&#x53EF;&#x4EE5;&#x7528;fd&#x9009;&#x9879;&#x4ECE;&#x6587;&#x4EF6;&#x4E2D;&#x521B;&#x5EFA;&#x53EF;&#x8BFB;&#x6D41;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+fs<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">&apos;/path/to/my/file&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>err<span class="token punctuation">,</span> fd<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> err<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">var</span> rs <span class="token operator">=</span>  fs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>fd<span class="token punctuation">:</span> fd<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token string">&apos;utf8&apos;</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    rs<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;data&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&apos;data: &apos;</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+</blockquote>
+<p>&#x6B64;&#x5916;&#xFF0C;&#x5982;&#x679C;&#x6307;&#x5411;&#x8BFB;&#x53D6;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x4E00;&#x90E8;&#x5206;&#xFF0C;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; <code>start</code>&#x548C; <code>end</code> &#x9009;&#x9879;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token string">&apos;/path/to/my/file&apos;</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// &#x4ECE;&#x7B2C; 10 &#x4E2A;&#x5B57;&#x8282;&#x5F00;&#x59CB;&#x8BFB;&#x53D6;</span>
+<span class="token keyword">var</span> options <span class="token operator">=</span> <span class="token punctuation">{</span>
+    start<span class="token punctuation">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> rs <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x8FD8;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E;&#x8BFB;&#x53D6;&#x7ED3;&#x675F;&#x4F4D;&#x7F6E;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token string">&apos;/path/to/my/file&apos;</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// &#x4ECE;&#x7B2C; 10 &#x4E2A;&#x5B57;&#x8282;&#x5F00;&#x59CB;&#x8BFB;&#x53D6;, &#x8BFB;&#x5B8C;&#x7B2C; 20 &#x4E2A;&#x5B57;&#x8282;&#x540E;&#x7ED3;&#x675F;</span>
+<span class="token keyword">var</span> options <span class="token operator">=</span> <span class="token punctuation">{</span>
+    start<span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+    end<span class="token punctuation">:</span> <span class="token number">20</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> rs <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5F00;&#x59CB;&#x4F4D;&#x7F6E;&#x548C;&#x7ED3;&#x675F;&#x4F4D;&#x7F6E;&#x4E0D;&#x4E00;&#x5B9A;&#x8981;&#x6210;&#x5BF9;&#x51FA;&#x73B0;&#x3002;</p>
+<p>&#x8FD8;&#x53EF;&#x4EE5;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#x53EF;&#x5199;&#x6D41;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// &#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x65B0;&#x5EFA;&#x7684; WriteStream &#x5BF9;&#x8C61;</span>
+<span class="token keyword">var</span> ws <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">createWriteStream</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><code>fs.createWriteStream()</code> &#x4E5F;&#x53EF;&#x4EE5;&#x63A5;&#x6536;&#x4E00;&#x4E2A;&#x9009;&#x9879;&#x5BF9;&#x8C61;&#x4F5C;&#x4E3A;&#x5176;&#x7B2C;&#x4E8C;&#x4E2A;&#x53C2;&#x6570;&#xFF0C;&#x9009;&#x9879;&#x5BF9;&#x8C61;&#x6709;&#x4EE5;&#x4E0B;&#x53EF;&#x9009;&#x5C5E;&#x6027;&#xFF1A;</p>
+<ul>
+<li><p><code>flags</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#String_type" target="_blank">&lt;string&gt;</a></p>
+</li>
+<li><p><code>encoding</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#String_type" target="_blank">&lt;string&gt;</a></p>
+</li>
+<li><p><code>fd</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type" target="_blank">&lt;integer&gt;</a></p>
+</li>
+<li><p><code>mode</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type" target="_blank">&lt;integer&gt;</a></p>
+</li>
+<li><p><code>autoClose</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type" target="_blank">&lt;boolean&gt;</a></p>
+</li>
+<li><p><code>start</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type" target="_blank">&lt;integer&gt;</a></p>
+</li>
+</ul>
+<p>&#x4ECE;&#x4E0A;&#x6570;&#x9009;&#x9879;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF0C;&#x4E0E;<code>fs.createReadStream()</code> &#x51E0;&#x4E4E;&#x65E0;&#x5F02;&#xFF0C;&#x53EA;&#x662F;&#x5C11;&#x4E86;&#x4E00;&#x4E2A;<code>end</code> &#x9009;&#x9879;&#x3002;&#x5B83;&#x4EEC;&#x6240;&#x4EE3;&#x8868;&#x7684;&#x542B;&#x4E49;&#x4E5F;&#x76F8;&#x4F3C;&#x3002;</p>
+<h3 id="&#x7406;&#x89E3;&#x7F51;&#x7EDC;&#x6D41;"><a name="&#x7406;&#x89E3;&#x7F51;&#x7EDC;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x7406;&#x89E3;&#x7F51;&#x7EDC;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1.3.2. &#x7406;&#x89E3;&#x7F51;&#x7EDC;&#x6D41;</h3>
+<p>Node &#x4E2D;&#x7F51;&#x7EDC; API &#x4E0A;&#x6709;&#x96C6;&#x4E2D;&#x7C7B;&#x578B;&#x7684;&#x6D41;&#x3002;&#x4F8B;&#x5982;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x7684; TCP &#x8FDE;&#x63A5;&#x5373;&#x662F;&#x53EF;&#x5199;&#x6D41;&#xFF0C;&#x53C8;&#x662F;&#x53EF;&#x8BFB;&#x6D41;&#xFF0C;&#x670D;&#x52A1;&#x5668;&#x8FDE;&#x63A5;&#x4E5F;&#x662F;&#x5982;&#x6B64;&#x3002;</p>
+<p>HTTP &#x7684;&#x8BF7;&#x6C42;&#x5BF9;&#x8C61;&#x662F;&#x4E00;&#x4E2A;&#x53EF;&#x8BFB;&#x6D41;&#x3002;HTTP &#x54CD;&#x5E94;&#x5BF9;&#x8C61;&#x662F;&#x4E00;&#x4E2A;&#x53EF;&#x5199;&#x6D41;&#x3002;</p>
+<p>&#x5728;&#x672C;&#x7AE0;&#x540E;&#x9762;&#x5C06;&#x4ECB;&#x7ECD;&#x6BCF;&#x4E00;&#x79CD;&#x7C7B;&#x578B;&#x7684;&#x6D41;&#x3002;&#x73B0;&#x5728;&#x53EA;&#x8981;&#x8BB0;&#x4F4F;&#x8FD9;&#x4E9B;&#x6D41;&#x90FD;&#x6709;&#x4E00;&#x4E2A;&#x901A;&#x7528;&#x7684;&#x63A5;&#x53E3;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x8BF4;&#x53EF;&#x4EE5;&#x4EA4;&#x66FF;&#x4F7F;&#x7528;&#x8FD9;&#x4E9B;&#x5BF9;&#x8C61;&#x3002;&#x8FD8;&#x53EF;&#x4EE5;&#x4E00;&#x6B21;&#x6027;&#x62BD;&#x8C61;&#x51FA;&#x4E00;&#x4E9B;&#x95EE;&#x9898;&#x5E76;&#x89E3;&#x51B3;&#x8FD9;&#x4E9B;&#x95EE;&#x9898;&#x3002;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x5C31;&#x662F;&#x95EE;&#x9898;&#x4E4B;&#x4E00;&#x3002;</p>
+<h2 id="&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4EE5;&#x53CA;&#x633D;&#x6551;&#x670D;&#x52A1;&#x5668;"><a name="&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4EE5;&#x53CA;&#x633D;&#x6551;&#x670D;&#x52A1;&#x5668;" class="anchor-navigation-ex-anchor" href="#&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4EE5;&#x53CA;&#x633D;&#x6551;&#x670D;&#x52A1;&#x5668;"><i class="fa fa-link" aria-hidden="true"></i></a>1.4. &#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4EE5;&#x53CA;&#x633D;&#x6551;&#x670D;&#x52A1;&#x5668;</h2>
+<p>&#x5F53;&#x6709;&#x8FDB;&#x7A0B;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#xFF0C;&#x5E76;&#x5C06;&#x6570;&#x636E;&#xFF08;&#x6216;&#x8005;&#x6570;&#x636E;&#x7684;&#x53D8;&#x6362;&#x5F62;&#x5F0F;&#xFF09;&#x53D1;&#x9001;&#x7ED9;&#x53E6;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x65F6;&#xFF0C;&#x4E00;&#x822C;&#x5C31;&#x4F1A;&#x6709;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x3002;</p>
+<h3 id="&#x7406;&#x89E3;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;"><a name="&#x7406;&#x89E3;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;" class="anchor-navigation-ex-anchor" href="#&#x7406;&#x89E3;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;"><i class="fa fa-link" aria-hidden="true"></i></a>1.4.1. &#x7406;&#x89E3;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;</h3>
+<p>Node &#x5728;&#x5904;&#x7406; I/O &#x64CD;&#x4F5C;&#x65F6;&#x4E0D;&#x4F1A;&#x4EA7;&#x751F;&#x963B;&#x585E;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x8BF4; Node &#x4E0D;&#x4F1A;&#x963B;&#x585E;&#x6570;&#x636E;&#x7684;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;&#x2014;&#x2014;&#x5982;&#x679C;&#x7528; <code>write</code> &#x65E0;&#x6CD5;&#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#xFF0C;&#x5C31;&#x4F1A;&#x7F13;&#x5B58;&#x6570;&#x636E;&#x3002;&#x60F3;&#x8C61;&#x4E00;&#x4E0B;&#x8FD9;&#x6837;&#x7684;&#x573A;&#x666F;&#xFF1A;&#x5C06;&#x6570;&#x636E;&#x4F20;&#x5165;&#x4E00;&#x4E2A;&#x53EF;&#x5199;&#x6D41;&#x4E2D;&#xFF08;&#x6BD4;&#x5982;&#x5230;&#x6D4F;&#x89C8;&#x5668;&#x7684; TCP &#x8FDE;&#x63A5;&#xFF09;&#xFF0C;&#x800C;&#x6570;&#x636E;&#x6E90;&#x662F;&#x4E00;&#x4E2A;&#x53EF;&#x8BFB;&#x6D41;&#xFF08;&#x6BD4;&#x5982;&#x6587;&#x4EF6;&#x53EF;&#x8BFB;&#x6D41;&#xFF09;&#x3002;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;http&apos;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> rs <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span><span class="token string">&apos;/path/to/big/file&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    rs<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;data&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        res<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    rs<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;end&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5982;&#x679C;&#x662F;&#x672C;&#x5730;&#x6587;&#x4EF6;&#xFF0C;&#x53EF;&#x8BFB;&#x6D41;&#x7684;&#x901F;&#x5EA6;&#x5E94;&#x8BE5;&#x662F;&#x5FEB;&#x7684;&#x3002;&#x7136;&#x800C;&#xFF0C;&#x5982;&#x679C;&#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x8FDE;&#x63A5;&#x662F;&#x6162;&#x901F;&#x7684;&#xFF0C;&#x53EF;&#x5199;&#x6D41;&#x4E5F;&#x5C31;&#x662F;&#x6162;&#x901F;&#x7684;&#x3002;&#x523B;&#x5EA6;&#x6D41;&#x4F1A;&#x5FEB;&#x901F;&#x4EA7;&#x751F; <code>&quot;data&quot;</code> &#x4E8B;&#x4EF6;&#xFF0C;&#x540C;&#x65F6;&#x6570;&#x636E;&#x5C06;&#x88AB;&#x53D1;&#x9001;&#x5230;&#x53EF;&#x5199;&#x6D41;&#x3002;&#x7136;&#x800C;&#xFF0C;Node &#x6700;&#x7EA2;&#x4E0D;&#x5F97;&#x4E0D;&#x7F13;&#x5B58;&#x6570;&#x636E;&#xFF0C;&#x56E0;&#x4E3A;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#x88AB;&#x586B;&#x6EE1;&#x3002;</p>
+<p>&#x5B9E;&#x9645;&#x4E0A;&#xFF0C;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A; write &#x547D;&#x4EE4;&#x800C;&#x8A00;&#xFF0C;&#x6587;&#x4EF6;&#x90FD;&#x4F1A;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x88AB;&#x7F13;&#x5B58;&#x3002;&#x968F;&#x7740;&#x8BF7;&#x6C42;&#x6210;&#x500D;&#x7684;&#x589E;&#x957F;&#xFF0C;&#x8981;&#x4E0D;&#x4E86;&#x591A;&#x4E00;&#x4F1A;&#x513F;&#x5C31;&#x4F1A;&#x4EA7;&#x751F;&#x5185;&#x5B58;&#x589E;&#x957F;&#x7684;&#x95EE;&#x9898;&#x3002;&#x4E00;&#x822C;&#x800C;&#x8A00;&#xFF0C;&#x5982;&#x679C;&#x65E2;&#x6709;&#x6570;&#x636E;&#x4EA7;&#x751F;&#x8005;&#xFF0C;&#x53C8;&#x6709;&#x6570;&#x636E;&#x6D88;&#x8D39;&#x8005;&#xFF0C;&#x5E76;&#x4E14;&#x6570;&#x636E;&#x4EA7;&#x751F;&#x6BD4;&#x6570;&#x636E;&#x6D88;&#x8D39;&#x8981;&#x5FEB;&#xFF0C;&#x5C31;&#x8981;&#x7F13;&#x5B58;&#x6570;&#x636E;&#x3002;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x6682;&#x505C;&#x6570;&#x636E;&#x4EA7;&#x751F;&#x8FD9;&#xFF0C;&#x77E5;&#x9053;&#x6570;&#x636E;&#x6D88;&#x8D39;&#x8005;&#x8D76;&#x4E0A;&#x6765;&#x4E3A;&#x6B62;&#x3002;</p>
+<h3 id="&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;"><a name="&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;" class="anchor-navigation-ex-anchor" href="#&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;"><i class="fa fa-link" aria-hidden="true"></i></a>1.4.2. &#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;</h3>
+<p>&#x5728;&#x5927;&#x591A;&#x6570;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C; &#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x6682;&#x505C;&#x6570;&#x636E;&#x751F;&#x4EA7;&#x8005;&#x6765;&#x907F;&#x514D;&#x586B;&#x6EE1;&#x5177;&#x6709;&#x672A;&#x5237;&#x65B0;&#x7F13;&#x51B2;&#x533A;&#x7684;&#x5185;&#x5B58;&#x2014;&#x2014;&#x53EF;&#x8BFB;&#x6D41;&#x2014;&#x2014;&#x4EE5;&#x4FBF;&#x8BA9;&#x6D88;&#x8D39;&#x8005;&#x7684;&#x6570;&#x636E;&#x2014;&#x2014;&#x53EF;&#x5199;&#x6D41;&#x2014;&#x2014;&#x4E0D;&#x4F1A;&#x88AB;&#x4F20;&#x5165;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#x4E2D;&#x3002;&#x5E78;&#x597D;&#xFF0C;Node &#x7684;&#x53EF;&#x8BFB;&#x6D41;&#x6709;&#x4E00;&#x4E9B;&#x53EF;&#x4EE5;&#x6EE1;&#x8DB3;&#x9700;&#x6C42;&#x7684;&#x529F;&#x80FD;&#xFF1A;&#x53EF;&#x4EE5;&#x6682;&#x505C;&#x548C;&#x6062;&#x590D;&#x53EF;&#x8BFB;&#x6D41;&#x3002;&#x4E0B;&#x9762;&#x662F;&#x4E00;&#x4E2A;&#x63A7;&#x5236;&#x6570;&#x636E;&#x6D41;&#x7684;&#x4F8B;&#x5B50;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;http&apos;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> rs <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span><span class="token string">&apos;/path/to/big/file&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    rs<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;data&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// &#x524D;&#x9762;&#x7684;&#x7AE0;&#x8282;&#x5DF2;&#x7ECF;&#x8BB2;&#x5230;&#xFF0C;write&#x51FD;&#x6570;&#x4F1A;&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x5E03;&#x5C14;&#x503C;</span>
+        <span class="token comment" spellcheck="true">// &#x5F53;&#x6570;&#x636E;&#x5B58;&#x5165;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#x7684;&#x65F6;&#x5019;&#x8FD4;&#x56DE;true</span>
+        <span class="token comment" spellcheck="true">// &#x5F53;&#x6570;&#x636E;&#x5B58;&#x5165;&#x7F13;&#x5B58;&#x7684;&#x65F6;&#x5019;&#x7684;&#x8FD4;&#x56DE;false</span>
+        <span class="token comment" spellcheck="true">// &#x8FD9;&#x91CC;&#x68C0;&#x6D4B;&#x6570;&#x636E;&#x662F;&#x5426;&#x88AB;&#x7F13;&#x5B58;&#xFF0C;&#x88AB;&#x7F13;&#x5B58;&#x8BF4;&#x660E;&#x524D;&#x9762;&#x7684;&#x6570;&#x636E;&#x6709;&#x79EF;&#x538B;&#x3002;</span>
+       <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span> res<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+           rs<span class="token punctuation">.</span><span class="token function">pause</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// &#x5F53;&#x6D41;&#x6210;&#x529F;&#x5237;&#x65B0;&#x6302;&#x8D77;&#x7684;&#x7F13;&#x51B2;&#x533A;&#x65F6;&#xFF0C;&#x5C31;&#x4F1A;&#x53D1;&#x5C04; &quot;drain&quot; &#x4E8B;&#x4EF6;</span>
+    rs<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;drain&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        rs<span class="token punctuation">.</span><span class="token function">resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    rs<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;end&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5728;&#x4E0A;&#x9762;&#x7684;&#x4F8B;&#x5B50;&#x4E2D;&#xFF0C;&#x521B;&#x5EFA;&#x4E86;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x5668;&#x5728; 3000 &#x7AEF;&#x53E3;&#xFF0C;&#x5E76;&#x5C06;&#x6587;&#x4EF6; <code>/path/to/big/file</code>&#x7684;&#x5185;&#x5BB9;&#x63D0;&#x4EA4;&#x7ED9;&#x6240;&#x6709; HTTP &#x8BF7;&#x6C42;&#x3002;</p>
+<p>&#x5982;&#x679C; write &#x547D;&#x4EE4;&#x65E0;&#x6CD5;&#x5C06;&#x53EF;&#x8BFB;&#x6D41;&#x4F20;&#x5165;&#x5185;&#x6838;&#x7F13;&#x51B2;&#x533A;&#xFF0C;&#x53EF;&#x8BFB;&#x6D41;&#x5C31;&#x4F1A;&#x88AB;&#x6682;&#x505C;&#x3002;&#x5F53;&#x53EF;&#x5199;&#x6D41;&#x5B8C;&#x6210;&#x63A5;&#x6536;&#x6570;&#x636E;&#x65F6;&#xFF0C;&#x4F1A;&#x89E6;&#x53D1; <code>&quot;drain&quot;</code> &#x4E8B;&#x4EF6;&#xFF0C;&#x8FD9;&#x65F6;&#x518D;&#x6062;&#x590D;&#x53EF;&#x8BFB;&#x6D41;&#x3002;</p>
+<h3 id="&#x5E94;&#x7528;-streampipe&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4E0E;&#x4F7F;&#x7528;-pipe-&#x96C6;&#x6210;&#x53EF;&#x8BFB;&#x6D41;&#x548C;&#x53EF;&#x5199;&#x6D41;"><a name="&#x5E94;&#x7528;-streampipe&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4E0E;&#x4F7F;&#x7528;-pipe-&#x96C6;&#x6210;&#x53EF;&#x8BFB;&#x6D41;&#x548C;&#x53EF;&#x5199;&#x6D41;" class="anchor-navigation-ex-anchor" href="#&#x5E94;&#x7528;-streampipe&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4E0E;&#x4F7F;&#x7528;-pipe-&#x96C6;&#x6210;&#x53EF;&#x8BFB;&#x6D41;&#x548C;&#x53EF;&#x5199;&#x6D41;"><i class="fa fa-link" aria-hidden="true"></i></a>1.4.3. &#x5E94;&#x7528; stream.pipe()&#x907F;&#x514D;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#x4E0E;&#x4F7F;&#x7528; pipe() &#x96C6;&#x6210;&#x53EF;&#x8BFB;&#x6D41;&#x548C;&#x53EF;&#x5199;&#x6D41;</h3>
+<p>&#x6682;&#x505C;&#x53EF;&#x8BFB;&#x6D41;&#x77E5;&#x9053;&#x53EF;&#x5199;&#x6D41;&#x8D76;&#x4E0A;&#x4E4B;&#x540E;&#x6062;&#x590D;&#x53EF;&#x8BFB;&#x6D41;&#x662F;&#x4E00;&#x79CD;&#x5FAA;&#x73AF;&#x6A21;&#x5F0F;&#xFF0C;Node &#x63D0;&#x4F9B;&#x4E00;&#x4E2A;&#x51FD;&#x6570; <code>stream.pipe()</code> &#x6765;&#x7B80;&#x5355;&#x5B9E;&#x73B0;&#x8FD9;&#x4E2A;&#x6A21;&#x5F0F;&#x3002;</p>
+<p><code>stream.pipe()</code> &#x547D;&#x4EE4;&#x662F;&#x53EF;&#x8BFB;&#x6D41;&#x63A5;&#x53E3;&#x7684;&#x4E00;&#x90E8;&#x5206;&#x2014;&#x2014;&#x7531;&#x4F20;&#x8F93;&#x6E90;&#x8C03;&#x7528;&#x2014;&#x2014;&#x5E76;&#x63A5;&#x53D7;&#x76EE;&#x6807;&#x53EF;&#x5199;&#x6D41;&#x4F5C;&#x4E3A;&#x7B2C;&#x4E00;&#x4E2A;&#x53C2;&#x6570;&#x3002;</p>
+<p>&#x5982;&#x679C;&#x5728;&#x4E0A;&#x9762;&#x7684;&#x4F8B;&#x5B50;&#x4E2D;&#x4F7F;&#x7528; <code>pipe()</code>&#x65B9;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x6781;&#x5927;&#x7684;&#x7B80;&#x5316;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js">fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;http&apos;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    rs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span><span class="token string">&apos;/path/to/big/file&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    rs<span class="token punctuation">.</span><span class="token function">pipe</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;<code>end()</code> &#x4F1A;&#x5728;&#x53EF;&#x8BFB;&#x6D41;&#x7ED3;&#x675F;&#x65F6;&#xFF0C;&#x5728;&#x53EF;&#x5199;&#x6D41;&#x4E0A;&#x88AB;&#x8C03;&#x7528;&#x3002; &#x4E3A;&#x4E86;&#x907F;&#x514D;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x53EF;&#x4EE5;&#x5C06; <code>end: false</code> &#x4F20;&#x5165; <code>pipe()</code> &#x51FD;&#x6570;&#xFF0C;&#x4F5C;&#x4E3A;&#x5176;&#x7B2C;&#x4E8C;&#x4E2A;&#x53C2;&#x6570;&#xFF0C;&#x8FD9;&#x4E2A;&#x53C2;&#x6570;&#x662F;&#x4E00;&#x4E2A;&#x9009;&#x9879;&#x5BF9;&#x8C61;&#xFF0C;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</p>
+<pre class="language-"><code class="lang-js">fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;fs&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;http&apos;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    rs<span class="token punctuation">.</span><span class="token function">createReadStream</span><span class="token punctuation">(</span><span class="token string">&apos;/path/to/big/file&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// &#x4F20;&#x5165;&#x9009;&#x9879;&#x5BF9;&#x8C61;</span>
+    rs<span class="token punctuation">.</span><span class="token function">pipe</span><span class="token punctuation">(</span>res<span class="token punctuation">,</span> <span class="token punctuation">{</span>end<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    rs<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&apos;end&apos;</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        res<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">&quot;And that&apos;s all, folks.!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        res end <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">;</span> 
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>&#x5728;&#x4E0A;&#x9762;&#x7684;&#x4EE3;&#x7801;&#x4E2D;&#xFF0C;&#x5728;&#x6587;&#x4EF6;&#x7ED3;&#x675F;&#x65F6;&#x5199;&#x5165;&#x5B57;&#x7B26;&#x4E32; &quot;And that&apos;s all, folks.!&quot; &#xFF0C; &#x7136;&#x540E;&#x7ED3;&#x675F;&#x8BF7;&#x6C42;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x8BA9; <code>stream.pipe()</code> &#x65B9;&#x6CD5;&#x8FDB;&#x884C;&#x8FD9;&#x9879;&#x5DE5;&#x4F5C;&#x3002;</p>
+<h2 id="&#x672C;&#x7AE0;&#x5C0F;&#x7ED3;"><a name="&#x672C;&#x7AE0;&#x5C0F;&#x7ED3;" class="anchor-navigation-ex-anchor" href="#&#x672C;&#x7AE0;&#x5C0F;&#x7ED3;"><i class="fa fa-link" aria-hidden="true"></i></a>1.5. &#x672C;&#x7AE0;&#x5C0F;&#x7ED3;</h2>
+<p>&#x6D41;&#x662F;&#x4E00;&#x79CD;&#x6781;&#x597D;&#x7684;&#x62BD;&#x8C61;&#xFF0C;&#x5141;&#x8BB8;&#x5229;&#x7528; Node &#x7684;&#x67B6;&#x6784;&#x6765;&#x8F7B;&#x677E;&#x5B9E;&#x73B0;&#x4EFB;&#x610F;&#x5BF9;&#x8C61;&#x7684;&#x6D41;&#xFF0C;&#x8FD9;&#x4E9B;&#x5BF9;&#x8C61;&#x5B9E;&#x73B0;&#x4E86;&#x6D41; API&#x3002;</p>
+<p>&#x6D41;&#x63A5;&#x53E3;&#x53EF;&#x4EE5;&#x8BA9;&#x4F60;&#x63A7;&#x5236;&#x6570;&#x636E;&#x6D41;&#x52A8;&#xFF0C;&#x4EE5;&#x7F13;&#x89E3;&#x6162;&#x5BA2;&#x6237;&#x7AEF;&#x95EE;&#x9898;&#xFF0C;&#x5373;&#x53EF;&#x4EE5;&#x505C;&#x6B62;&#x548C;&#x6062;&#x590D;&#x53EF;&#x8BFB;&#x6D41;&#x3002;&#x901A;&#x8FC7;&#x4F7F;&#x7528; <code>stream.pipe()</code> &#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x5B9E;&#x73B0;&#x8BE5;&#x8FC7;&#x7A0B;&#x7684;&#x81EA;&#x52A8;&#x5316;&#xFF0C;&#x8FD9;<strong>&#x5BF9;&#x4E8E;&#x4EFB;&#x4F55;&#x53EF;&#x8BFB;&#x6D41;&#x5B9E;&#x4F8B;&#x90FD;&#x9002;&#x7528;</strong>&#x3002; </p>
+<footer class="page-footer"><span class="copyright">Copyright &#xA9; tuzhu008 2017 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x8BA2;&#x65F6;&#x95F4;&#xFF1A;
+2017-12-06 11:19:42
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../process/" class="navigation navigation-prev " aria-label="Previous page: 第 8 章： 创建和控制外部进程">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../tcpServer/" class="navigation navigation-next " aria-label="Next page: 第10章： 构建TCP服务器">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第 9 章： 读写数据流","level":"4.3","depth":1,"next":{"title":"第10章： 构建TCP服务器","level":"4.4","depth":1,"path":"tcpServer/README.md","ref":"tcpServer/README.md","articles":[]},"previous":{"title":"第 8 章： 创建和控制外部进程","level":"4.2","depth":1,"path":"process/README.md","ref":"process/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-small","anchors","anchor-navigation-ex","favicon","copy-code-button","alerts","splitter","book-summary-scroll-position-saver","include-codeblock","ace","prism","prism-themes","-highlight","tbfed-pagefooter","github","sectionx","livereload"],"root":".","styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy tuzhu008 2017","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"prism":{"css":["prism-themes/themes/prism-atom-dark.css"]},"ace":{},"github":{"url":"https://github.com/tuzhu008"},"livereload":{},"book-summary-scroll-position-saver":{},"splitter":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"night","family":"serif","size":2},"sectionx":{"tag":"b"},"anchor-navigation-ex":{"associatedWithSummary":true,"float":{"level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"mode":"float","multipleH1":true,"pageTop":{"level1Icon":"","level2Icon":"","level3Icon":"","showLevelIcon":false},"printLog":false,"showLevel":true},"favicon":{"shortcut":"assets/images/favicon.ico","bookmark":"assets/images/favicon.ico","appleTouch":"assets/images/apple-touch-icon.png","appleTouchMore":{"120x120":"assets/images/apple-touch-icon-120x120.png","180x180":"assets/images/apple-touch-icon-180x180.png"}},"prism-themes":{},"alerts":{},"expandable-chapters-small":{},"copy-code-button":{},"include-codeblock":{"check":false,"edit":false,"fixlang":false,"lang":"","template":"acefull","theme":"tomorrow","unindent":true},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{}},"theme":"default","author":"tuzhu008","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Node.js高级编程","language":"zh-hans","gitbook":"*","description":"Node.js高级编程手工修正版"},"file":{"path":"stream/README.md","mtime":"2017-12-06T03:19:42.035Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-12-05T13:53:27.036Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-copy-code-button/toggle.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-alerts/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-book-summary-scroll-position-saver/book-summary-scroll-position-saver.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
