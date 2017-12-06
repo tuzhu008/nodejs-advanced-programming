@@ -103,7 +103,8 @@ writeable_stream.write('this is an UTF-8 string');
 下面是一个向 `write` 函数传入另一种编码格式的例子：
 
 ```js
-var writable_stream. = ... ; 
+
+var writable_stream. = ... ; 
 writable_stream.write('7e3e4acde5ad240a8ef5e7 31e644fbdl', 'base64');
 ```
 
@@ -241,9 +242,105 @@ HTTP 的请求对象是一个可读流。HTTP 响应对象是一个可写流。
 
 ## 避免慢客户端问题以及挽救服务器
 
-当有进程读取数据，并将数据（或者数据的变换形式）
+当有进程读取数据，并将数据（或者数据的变换形式）发送给另一个进程时，一般就会有慢客户端问题。
 
+### 理解慢客户端问题
 
+Node 在处理 I/O 操作时不会产生阻塞，也就是说 Node 不会阻塞数据的读写操作——如果用 `write` 无法将数据写入内核缓冲区，就会缓存数据。想象一下这样的场景：将数据传入一个可写流中（比如到浏览器的 TCP 连接），而数据源是一个可读流（比如文件可读流）。
 
+```js
+var fs = require('fs');
 
+require('http').createServer(function (req, res) {
+    var rs = fs.createReadStream('/path/to/big/file');
 
+    rs.on('data', function (data) {
+        res.write(data);
+    });
+
+    rs.on('end', function () {
+        res.end();
+    });
+}).listen(3000);
+``` 
+如果是本地文件，可读流的速度应该是快的。然而，如果客户端的连接是慢速的，可写流也就是慢速的。刻度流会快速产生 `"data"` 事件，同时数据将被发送到可写流。然而，Node 最红不得不缓存数据，因为内核缓冲区被填满。
+
+实际上，对于每个 write 命令而言，文件都会在内存中被缓存。随着请求成倍的增长，要不了多一会儿就会产生内存增长的问题。一般而言，如果既有数据产生者，又有数据消费者，并且数据产生比数据消费要快，就要缓存数据。因此需要暂停数据产生这，知道数据消费者赶上来为止。
+
+### 避免慢客户端问题
+
+在大多数情况下， 可以通过暂停数据生产者来避免填满具有未刷新缓冲区的内存——可读流——以便让消费者的数据——可写流——不会被传入内核缓冲区中。幸好，Node 的可读流有一些可以满足需求的功能：可以暂停和恢复可读流。下面是一个控制数据流的例子：
+
+```js
+var fs = require('fs');
+
+require('http').createServer(function (req, res) {
+    var rs = fs.createReadStream('/path/to/big/file');
+
+    rs.on('data', function (data) {
+        // 前面的章节已经讲到，write函数会返回一个布尔值
+        // 当数据存入内核缓冲区的时候返回true
+        // 当数据存入缓存的时候的返回false
+        // 这里检测数据是否被缓存，被缓存说明前面的数据有积压。
+       if (! res.write(data)) {
+           rs.pause();
+       }
+    });
+
+    // 当流成功刷新挂起的缓冲区时，就会发射 "drain" 事件
+    rs.on('drain', function () {
+        rs.resume();
+    });
+
+    rs.on('end', function () {
+        res.end();
+    })
+}).listen(3000); 
+```
+
+在上面的例子中，创建了一个服务器在 3000 端口，并将文件 `/path/to/big/file`的内容提交给所有 HTTP 请求。
+
+如果 write 命令无法将可读流传入内核缓冲区，可读流就会被暂停。当可写流完成接收数据时，会触发 `"drain"` 事件，这时再恢复可读流。
+
+### 应用 `stream.pipe()`避免慢客户端问题与使用 `pipe()` 集成可读流和可写流
+
+暂停可读流知道可写流赶上之后恢复可读流是一种循环模式，Node 提供一个函数 `stream.pipe()` 来简单实现这个模式。
+
+`stream.pipe()` 命令是可读流接口的一部分——由传输源调用——并接受目标可写流作为第一个参数。
+
+如果在上面的例子中使用 `pipe()`方法，可以极大的简化代码：
+
+```js
+fs = require('fs');
+
+require('http').createServer(function (req, res) {
+    rs.createReadStream('/path/to/big/file');
+    rs.pipe(res);
+}).listen(3000);
+```
+
+默认情况下，`end()` 会在可读流结束时，在可写流上被调用。 为了避免这种情况，可以将 `end: false` 传入 `pipe()` 函数，作为其第二个参数，这个参数是一个选项对象，如下所示：
+
+```js
+fs = require('fs');
+
+require('http').createServer(function (req, res) {
+    rs.createReadStream('/path/to/big/file');
+
+    rs.pipe(res, {end: false});
+
+    rs.on('end', function () {
+        res.write("And that's all, folks.!");
+        res end () ; 
+    });
+}).listen(3000);
+
+```
+
+在上面的代码中，在文件结束时写入字符串 "And that's all, folks.!" ， 然后结束请求，而不是让 `stream.pipe()` 方法进行这项工作。
+
+## 本章小结
+
+流是一种极好的抽象，允许利用 Node 的架构来轻松实现任意对象的流，这些对象实现了流 API。
+
+流接口可以让你控制数据流动，以缓解慢客户端问题，即可以停止和恢复可读流。通过使用 `stream.pipe()` 方法可以实现该过程的自动化，这**对于任何可读流实例都适用**。
