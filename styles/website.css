@@ -19,3 +19,6 @@ ul p {
 blockquote>p:first-child {
     text-indent: 0;
 }
+blockquote {
+    padding-bottom: 15px !important;
+}
