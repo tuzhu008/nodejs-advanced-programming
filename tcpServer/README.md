@@ -284,7 +284,205 @@ require('net').createServer(function (socket) {
 
 现在准备开始构建一个基于 TCP 的聊天服务器，可以从实例化服务器、记录一些重要事件以及将服务器绑定到端口 4001 着手。
 
+首先创建一个 chatServer.js 文件。
 
+**第一步：**
+
+```js
+var net = require('net');
+
+var server = net.createServer();
+
+server.on('error', function (err) {
+    console.log('Server error: ', err.message);
+});
+
+server.on('close', function () {
+    console.log('Server closed');
+});
+
+server.listen(4001);
+```
+
+### 接受连接
+
+下一步需要接受新的客户端连接。
+
+**第二步：**
+
+```js
+var net = require('net');
+
+var server = net.createServer();
+
+// 监听 connection 事件，有新连接时触发
+server.on('connection', function (socket) {
+    console.log('got a new connection');    
+});
+
+server.on('error', function (err) {
+    console.log('Server error: ', err.message);
+});
+
+server.on('close', function () {
+    console.log('Server closed');
+});
+
+server.listen(4001);
+```
+
+### 从连接中读取数据
+
+每当服务器获得新的连接时，需要通过绑定data事件，让其监听传入的数据。
+
+**第三步：**
+
+```js
+var net = require('net');
+
+var server = net.createServer();
+
+server.on('connection', function (socket) {
+    console.log('got a new connection');
+    // socket 监听 data 事件
+    socket.on('data', function (data) {
+        console.log('got data:', data); 
+    });    
+});
+
+server.on('error', function (err) {
+    console.log('Server error: ', err.message);
+});
+
+server.on('close', function () {
+    console.log('Server closed');
+});
+
+server.listen(4001);
+```
+
+### 聚合所有客户端
+
+因为创建了一个聊天服务器，在其中需要向所有客户端广播用户数据，所以第一步是将所有连接存入某个位置。
+
+**第四步：**
+
+```js
+var net = require('net');
+
+var server = net.createServer();
+
+// 创建客户端容器
+var sockets = [];
+
+server.on('connection', function (socket) {
+    console.log('got a new connection');
+    // 存储新连接
+    sockets.push(socket);
+    
+    socket.on('data', function (data) {
+        console.log('got data:', data); 
+    });    
+});
+
+server.on('error', function (err) {
+    console.log('Server error: ', err.message);
+});
+
+server.on('close', function () {
+    console.log('Server closed');
+});
+
+server.listen(4001);
+```
+
+### 广播数据
+
+每当一个已连接的用户输入数据， 就应该将数据广播给所有其他已连接的用户，如下所示：
+
+**第五步：**
+
+```js
+var net = require('net');
+
+var server = net.createServer();
+
+var sockets = [];
+
+server.on('connection', function (socket) {
+    console.log('got a new connection');
+
+    sockets.push(socket);
+    
+    socket.on('data', function (data) {
+        console.log('got data:', data); 
+        
+        // 向其他客户端发送数据
+        sockets.forEach(function (otherSocket) {
+            if (socket !== otherSocket) {
+                otherSocket.write(data);
+            }
+        });
+    });    
+});
+
+server.on('error', function (err) {
+    console.log('Server error: ', err.message);
+});
+
+server.on('close', function () {
+    console.log('Server closed');
+});
+
+server.listen(4001);
+```
+
+### 删除被关闭的连接
+
+现在至少还缺少一步——还要在连接被关闭时将其删除， 如下所示：
+
+**最后一步：**
+
+```js
+var net = require('net');
+
+var server = net.createServer();
+
+var sockets = [];
+
+server.on('connection', function (socket) {
+    console.log('got a new connection');
+
+    sockets.push(socket);
+    
+    socket.on('data', function (data) {
+        console.log('got data:', data); 
+        
+        sockets.forEach(function (otherSocket) {
+            if (socket !== otherSocket) {
+                otherSocket.write(data);
+            }
+        });
+    });
+    
+    // 监听 socket 的关闭事件
+    socket.on('close', function () {
+        console.log('coonection closed');
+        var index = sockets.indexOf(socket);
+        sockets.splice(index, 1);
+    });    
+});
+
+server.on('error', function (err) {
+    console.log('Server error: ', err.message);
+});
+
+server.on('close', function () {
+    console.log('Server closed');
+});
+
+server.listen(4001);
+```
 
 
 
