@@ -24,8 +24,8 @@
 * [第12章： 构建TCP客户端](tcpClient/README.md)
 * [第13章： 创建HTTP请求](httpRequest/README.md)
 * [第14章： 使用用户数据报](UDP/README.md)
-* [第15章： 使用TLS/SSL保证服务器的安全性](TSL_SSL/README.md)
-* [第16章： 使用HTTPS保证HTTP服务器的安全性](HTTPS/README.md)
+* 第15章： 使用TLS/SSL保证服务器的安全性
+* 第16章： 使用HTTPS保证HTTP服务器的安全性
 
 
 
