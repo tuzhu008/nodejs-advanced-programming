@@ -265,7 +265,90 @@ append_some_a_to_b(function (err) {
 
 ## 使用 ASYNC 流程控制库
 
-如前面的例子所示，有时可以回滚自定义的通用流程，然而，很多第三方库能够简化这项工作以及其他异步模式，其中一个就是 [async 模块](https://github.com/caolan/async)。
+如前面的例子所示，有时可以回滚自定义的通用流程，然而，很多第三方库能够简化这项工作以及其他异步模式，其中一个就是 [async 模块](https://tuzhu008.github.io/async_cn/)。
 
+安装 async 模块，并将其添加到 package.json 清单文件中，如下所示：
 
+```js
+$ npm install async --save;
+```
+
+下面的例子完成了一个返回给定数值求平方的 HTTP 服务器。如下所示：
+
+```js
+var port = process.argv[2] && parseInt(process.argv[2], 10) || 8080;
+
+require('http').createServer(function(req, res) {
+    var body = '';
+    
+    req.setEncoding('utf8');
+    
+    req.on('data', function (data) {
+        body += data;
+    });
+    
+    req.once('end', function () {
+        var number = JSON.parse(body);
+        var squared = Math.pow(number, 2);
+        res.end(JSON.strigify(squared);
+    });
+}).listen(port, function () {
+    console.log('Squaring Server listening on port %d',port);
+});
+```
+
+将上述脚本保存为 server.js 文件，并启动它：
+
+```bash
+$ node server.js
+
+Squaring Server listening on port 8080
+```
+
+下面介绍 async 中几个有用的辅助函数。
+
+### 串行执行
+
+可以串行执行一组异步返回结果的函数。将使用上面的代码来学习。
+
+为了运行这些例子，还需要安装 request 模块，如下：
+
+```bash
+$ npm install request
+```
+
+下面的代码展示了一个使用 [`async.series`](https://tuzhu008.github.io/async_cn/docs.html#series) 辅助函数将两个 I/O 操作执行串接起来的例子：
+
+```js
+var async = require('async');
+var request = require('request');
+
+function done (err, results) {
+  if (err) {
+    throw err;
+  }
+  console.log('results: %j', results);
+}
+
+async.series([
+  function (callback) {
+    request.post({
+      uri: 'http://localhost:8080',
+      body: '4'
+    }, function (err, res, body) {
+      callback(err, body && JSON.parse(body));
+    })
+  },
+  function (callback) {
+    request.post({
+      uri: 'http://localhost:8080',
+      body: '5'
+    }, function (err, res, body) {
+      callback(err, body && JSON.parse(body));
+    })
+  },
+], done);
+```
+
+上面的代码执行了
 
