@@ -181,7 +181,7 @@ var fs = require('fs');
 function cascade (callbacks, callback) {
     // 复制函数数组
     var functions = callbacks.slice(0);
-    
+
     function processNext (err) {
         // 
         if (err) {
@@ -199,7 +199,7 @@ function cascade (callbacks, callback) {
             // 当函数数组中的函数值行完毕时
             func = callback;
         }
-        
+
         // 将next函数添加到参数列表
         args.push(processNext);
 
@@ -265,7 +265,7 @@ append_some_a_to_b(function (err) {
 
 ## 使用 ASYNC 流程控制库
 
-如前面的例子所示，有时可以回滚自定义的通用流程，然而，很多第三方库能够简化这项工作以及其他异步模式，其中一个就是 async 模块。
+如前面的例子所示，有时可以回滚自定义的通用流程，然而，很多第三方库能够简化这项工作以及其他异步模式，其中一个就是 [async 模块](https://github.com/caolan/async)。
 
 
 
