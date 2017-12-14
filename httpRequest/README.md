@@ -278,7 +278,465 @@ request('http://www.acme.com:4001/something?page=2', function (error, response, 
 
 下面是选项对象可以接受的部分参数：
 
-* `uri` 或`url` 完全合法的 URI 
+* `uri` 或`url` —— 完全合法的 URI 或者是经 `url.parse()` 解析的 URL 对象。例如 `http://my.server.com/some/path?a=1&b=2`。
+* `method` —— HHTP 方法，默认是 GET.
+* `qs` —— 作为查询字符串附加到 URL 后的名称-值对。例如：`{a:1, b:2}`。
+* `body` —— PATCH、POST 和 PUT 请求主体，必须是缓冲区或字符串。
+* `form` —— 将请求主体设置为查询字符串的形式，并且在请求头中增加了内容类型 `application/x-www-form-urlcoded;charset=utf-8`。
+* `json` —— 将请求主体设置为 JSON 的形式，并且在头部数据中增加了内容类型 `application/json`。
+* `followRedirect` —— 跟随具有状态码 3xx 的响应，这类响应表示重定向，默认为 `true`。
+* `maxRedireects` —— 跟随重定向的最多次数，默认是10。
+* `onResponse` —— 如果 `onResponse` 为 `true`， 回调函数将在 `response` 事件发生时被调用，而不是在 `end` 事件发生时被调用。
+* `encoding` —— encoding 是 `setEncoding` 函数用来为响应数据设置编码格式的，如果 `encoding` 为 `null`，响应主体将以缓冲区的形式返回。
+* `pool` —— 表示请求代理的哈希对象。
+* `pool.maxSockets` —— 一个整数，表示套接字池中套接字的最大数目。
+* `timeout` —— 一个整数，表示在放弃之前等待对请求做出响应的时间，单位是毫秒。
 
+> **[info] 「编者注：」**
+>
+> 想要获取更多可用的选项，请访问 [request 文档](https://tuzhu008.github.io/gitbook-Node_cn/Labrary/request/#requestoptions-callback)
 
+### 创建测试服务器
 
+要想全面理解第三方请求模块是如何工作的，可以创建一个简单的 HTTP 服务器来打印一些与 HTTP 请求有关的重要信息，如下所示：
+
+```js
+require('http').createServer(function (req, res) {
+    function printBack () {
+        res.writeHead(200, {'Content-type':'text/plain'});
+
+        res.end(JSON.stringify({
+            url: req.url,
+            method: req.method,
+            header: req.headers
+        }))
+    }
+
+    switch(req.url) {
+        case '/redirect':
+            res.writeHead(301, {'Location': '/'});
+            res.end();
+            break;
+        case '/print/body':
+            req.setEncoding('utf8');
+            var body = '';
+            req.on('data', function (data) {
+                body += data;
+            });
+            req.on('end', function () {
+                res.end(JSON.stringify(body));
+            });
+            break;
+        default:
+            printBack();
+            break;
+    }
+}).listen(4001, function () {
+    console.log('Server is listening on 4001');
+});
+```
+
+将上面的文件保存为 server.js，并用下面的命令运行：
+
+```bash
+$ node server.js
+```
+
+然后要对这个服务器进行简单的调用，如下所示：
+
+```js
+var request = require('request');
+var inspect = require('util').inspect;
+
+request('http://localhost:4001/abc/def', function (err, res, body) {
+  if (err) {
+    throw err;
+  }
+  console.log(inspect({
+    err: err,
+    res: {
+      status: res.statusCode
+    },
+    body: JSON.parse(body)
+  }));
+});
+```
+
+不用停止服务器，将上述代码保存为 simple.js，并且在命令行下运行它:
+
+```bash
+$ node simple.js
+```
+
+结果应该是：
+
+```bash
+{ err: null,
+  res: { status: 200 },
+  body:
+   { url: '/abc/def',
+     method: 'GET',
+     header: { host: 'localhost:4001', connection: 'close' } } }
+```
+
+可以从中看出服务器从请求中得到什么样的请求头、URL和方法，你能看到这些是因为没有向请求传入任何数据，也没有向其写入任何数据，因此 `request` 模块会假定请求主体的长度为 0。
+
+### 跟随重定向
+
+`request` 模块的众多特性之一是它在默认情况下能够跟随重定向，可以用运行中的请求内省服务器来观察这个特征，内省服务器进行了编码，以便当 URL 是 `/redirect` 时，可以用 `301` 重定向响应状态码来做出响应。可以用客户端来查看跟随上述 URL 的请求，如下所示：
+
+```js
+var request = require('request');
+var inspect = require('util').inspect;
+
+request('http://localhost:4001/redirect', function (err, res, body) {
+  if (err) {
+    throw err;
+  }
+  console.log(inspect({
+    err: err,
+    res: {
+      status: res.statusCode
+    },
+    body: JSON.parse(body)
+  }));
+});
+```
+
+将上面的代码保存为 redirect.js，使用下面的代码运行它：
+
+```bash
+$ node redirect.js
+```
+
+可以看到如下的输出信息：
+
+```bash
+{ err: null,
+  res: { status: 200 },
+  body:
+   { url: '/',
+     method: 'GET',
+     header:
+      { referer: 'http://localhost:4001/redirect',
+        host: 'localhost:4001',
+        connection: 'close' } } }
+```
+
+可以看到服务器返回的 URL 是 `/`，而不是原来的 `/redirect`，这意味着跟随服务器的请求重定向为 `/`。
+
+如果你希望在发生重定向时得到通知，就应该将请求选项的`followRedirect` 属性设置为 `false`，以此来禁用跟随重定向属性。
+
+某些服务器可能会发生错误，会使重定向陷入循环中，这也是为什么请求要定义重定向最多次数的原因，重定向最多次数的默认值是 `10`，但是可以根据需要对该值进行调整，例如，你也许希望每个请求的重定向最多次数为 3，如果重定向超过三次，则操作失败。然而，你也许还是愿意在每个请求上都确保一个较大的重定向次数。你可以像下面这样，将 `maxRedirect` 属性设置为希望的值。
+
+```js
+var options = {
+    url: 'http://www.example.com',
+    maxRedirect: 3
+};
+
+request(options, callback);
+```
+
+### 设置请求选项
+
+除了请求中的 GET 方法外，还可以执行一些其他的 HTTP 方法。例如，可以使用 options 的方法属性并对 HTTP 方法进行编码，这和原生的 Node http.request 方法非常相似。可是使用如下的快捷方式：
+
+```js
+request.get();
+request.put();
+request.post();
+request.del();
+```
+
+下面的代码使用 POST 请求：
+
+```js
+var request = require('request');
+var inspect = require('util').inspect;
+
+request.post('http://localhost:4001/abc/def', function (err, res, body) {
+  if (err) {
+    throw err;
+  }
+  console.log(inspect({
+    err: err,
+    res: {
+      status: res.statusCode
+    },
+    body: JSON.parse(body)
+  }));
+});
+```
+
+将上面的代码保存为 post.js 并运行：
+
+```bash
+$ node post.js
+```
+
+应该得到如下所示的信息：
+
+```bash
+{ err: null,
+  res: { status: 200 },
+  body:
+   { url: '/abc/def',
+     method: 'POST',
+     header:
+      { host: 'localhost:4001',
+        'content-length': '0',
+        connection: 'close' } } }
+```
+
+上面的输出信息证实了服务器能够理解所发出的请求是 POST 请求。
+
+更一般的情况是请求可以接受 options 对象来代替字符串URL:
+
+```js
+var request = require('request');
+var inspect = require('util').inspect;
+
+var options = {
+    url: 'http://localtion:4001/abc/def',
+    method: 'PUT'
+};
+
+request(options, function (err, res, body) {
+    if (err) {
+        throw err;
+    }
+    console.log(inspect({
+        err: err,
+        res: {
+            statusCode: res.statusCode
+        },
+        body: body
+    }));
+});
+```
+
+通过使用 options 对象，可以发送一些自定义的请求头，如下所示：
+
+```js
+var request = require('request');
+var inspect = require('util').inspect;
+
+var options = {
+    url: 'http://localhost:4001/abc/def',
+    method: 'PUT',
+    headers: {
+        'X-My-Header': 'value'
+    }
+};
+
+request(options, function (err, res, body) {
+    if (err) {
+        throw err;
+    }
+    console.log(inspect({
+        err: err,
+        res: {
+            statusCode: res.statusCode,
+            headers: res.headers
+        },
+        body: JSON.parse(body)
+    }));
+});
+```
+
+将上面代码存入到文件 header.js 并运行：
+
+```bash
+$ node header.js
+```
+
+然后会得到下面的结果：
+
+```bash
+{ err: null,
+  res:
+   { statusCode: 200,
+     headers:
+      { 'content-type': 'text/plain',
+        date: 'Thu, 14 Dec 2017 14:55:40 GMT',
+        connection: 'close',
+        'transfer-encoding': 'chunked' } },
+  body:
+   { url: '/abc/def',
+     method: 'PUT',
+     header:
+      { 'x-my-header': 'value',
+        host: 'localhost:4001',
+        'content-length': '0',
+        connection: 'close' } } }
+```
+
+可以看到服务器得到请求头。
+
+### 对请求体进行编码
+
+有时候必须在请求主体上发送一些数据，可以使用表单编码对请求主体进行编码，这是浏览器对请求主体字符串进行编码的一种模拟。如下所示：
+
+```js
+var request  = require('request');
+var inspect = require('util').inspect;
+
+var body = {
+    a: 1,
+    b: 2
+};
+
+var options = {
+    url: 'http://localhost:4001/print/body',
+    form: body
+}
+
+request(options, function (err, res, body) {
+    if (err) {
+        throw err;
+    }
+
+    console.log(inspect({
+        err: err,
+        res: {
+            status: res.statusCode,
+            headers: res.headers
+        },
+        body: JSON.parse(body)
+    }))
+});
+
+```
+
+将上面的代码保存为文件 form.js 并运行：
+
+```bash
+$ node form.js
+```
+
+可以得到如下所示的输出信息:
+
+```bash
+{ err: null,
+  res:
+   { status: 200,
+     headers:
+      { date: 'Thu, 14 Dec 2017 15:10:10 GMT',
+        connection: 'close',
+        'content-length': '9' } },
+  body: 'a=1&b=2' }
+```
+
+可以看到 qs 对象被编码写入了请求主体。
+
+此外，对请求主体中的某些参数可以采用 JSON 编码，如下所示：
+
+```js
+var request  = require('request');
+var inspect = require('util').inspect;
+
+var body = {
+    a: 1,
+    b: 2
+};
+
+var options = {
+    url: 'http://localhost:4001/print/body',
+    json: body
+}
+
+request(options, function (err, res, body) {
+    if (err) {
+        throw err;
+    }
+
+    console.log(inspect({
+        err: err,
+        res: {
+            status: res.statusCode,
+            headers: res.headers
+        },
+        body: JSON.parse(body)
+    }))
+});
+```
+
+将上述代码保存为文件 json.js 并运行：
+
+```bash
+$ node json.js
+```
+
+可以得到如下所示的输出信息:
+
+```bash
+{ err: null,
+  res:
+   { status: 200,
+     headers:
+      { date: 'Thu, 14 Dec 2017 15:23:15 GMT',
+        connection: 'close',
+        'content-length': '19' } },
+  body: { a: 1, b: 2 } }
+```
+
+### 流式传送
+
+请求可以返回一个客户端请求对象，可以将该对象传入可写流中（正如我在本章前面所展示的 Node 核心 HTTP 请求函数那样），甚至可以将请求对象传入另一个请求。例如，如果想将请求的响应传入文件流中，可以按下面的方式：
+
+```js
+var fs = require('fs') ; 
+var request = require('request'); 
+
+var file = fs.createWriteStream('/path/to/my/file');
+
+request.get('http:://www.example.com/tmp/test.html').pipe (file);
+```
+
+还可以将一个请求传入另一个请求中，例如，可以将一个 GET 请求传入了另一个 POST 请求中，如下所示：
+
+```js
+var request = require('request');
+var source = request.get('http://my.server.com/images/some_file.jpg);
+
+var target = request.post('http://other.server.com/images/some_file.jpg');
+source.pipe(target);
+```
+
+### 使用 Cookie Jar
+
+默认情况下，请求会解释 HTTP cookies, 并将其存入全局的cookie jar，这意味着对于应用程序而言，所有的请求都会发送来自指定主机的 cookie。
+
+这种行为有时是有用的，但是也许你不想获取每个 cookie，因为这些 cookie 对于应用程序并不重要。可以通过选择请求的默认值以便在全局禁用 cookies:
+
+```js
+request.defualts({jar: false})
+```
+
+还可以通过在请求发出之前，将请求选项中的 `jar` 属性设置为 `false` 来关闭该行为：
+
+```js
+var options = {
+    url: 'http://www.example.com',
+    jar: false
+};
+request(options, callback);
+```
+
+此外还可以通过在 options 对象中创建和指定一个 cookie jar，使得每个请求都可以使用这个特定的 cookie jar:
+
+```js
+var jar = request.jar();
+var options = {
+    url: 'http://www.example.com',
+    jar: jar
+};
+request(options, callback);
+```
+
+## 本章小结
+
+在 Node 中通过使用 `http` 模块的 `request()` 函数可以很容易的创建 HTTP 请求，`request()` 函数会返回一个 `http.ClientReponse` 对象，该对象会在服务器做出响应时发射 `response` 对象。只要愿意，可以以流的方式传送响应主体， 或者将响应主体传入另一个可写流。此外还可以查看响应头，状态码和 HTTP 的版本。
+
+为了简化创建 HTTP请求，可以使用 Mikeal Roger 的`request` 模块，在大多数情况下该模块会让你使用 URL。这个模块有一些很有用的特性，例如跟随重定向、记录cookies、缓冲响应主体、设置查询字符串的值、设置表单编码或者 JSON 编码的请求主体以及流式传递。
