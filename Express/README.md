@@ -252,7 +252,7 @@ module.exports = router;
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
+/* 获取用户列表 */
 router.get('/', function(req, res, next) {
   res.render('users/index', {title: 'User List'});
 });
@@ -415,7 +415,7 @@ form(action='/users/' + encodeURIComponent(user.username), method='POST')
   input(type='submit', value='Delete')
 ```
 
-在第一个小节中会显示用户名和个人简介，然后提供了一个带有按钮的简单表单，可以用这个按钮将用户从数据库中删除。 还可以利用该方法重载中间件组件，传入一个请求主体参数 `_method`，该参数包含字符串 "DELETE"。当方法重载中间件设置这个参数时，将请求方法从 POST 修改为 DELETE，这样就会激活如下所示的路由监听器：
+在第一个小节中会显示用户名和个人简介，然后提供了一个带有按钮的简单表单，可以用这个按钮将用户从数据库中删除。 还可以利用该方法重载中间件组件，传入一个请求主体参数 `_method`，该参数包含字符串 "DELETE"。
 
 > **[info] 「编者注」：**
 >
@@ -427,12 +427,43 @@ form(action='/users/' + encodeURIComponent(user.username), method='POST')
 > <input type="hidden" name="_method" value="PUT">
 > ```
 
+因此，在这里我们首先要安装方法覆盖的中间件 `method-override`:
+
+```bash
+npm install method-override --save
+```
+
+然后在 app.js 引入并使用它:
+
+```js
+var methodOverride = require('method-override');
+
+//...
+
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+// 必须要放在 body 被解析之后
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // 在 POST 主体中查找 并 删除它
+    var method = req.body._method
+    delete req.body._method
+    return method
+  }
+}));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+```
+当方法重载中间件设置这个参数时，将请求方法从 POST 修改为 DELETE，这样就会激活如下所示的路由监听器：
+
 ```js
 /* 删除指定用户 */
 router.delete('/:name', function (req, res, next) {
   if (users[req.params.user]) {
     delete users[req.params.user];
-    res.redirect('/usres');
+    res.redirect('/users');
   } else {
     next();
   }
@@ -453,4 +484,174 @@ router.get('/new', function (req, res, next) {
 这个监听器只是用于渲染模板 `views/users/new.jade`，需要创建该模板，如下所示：
 
 ```jade
+
 ```
+
+面这个模板包含一个简单的表单，用于创建用户，当创建 Create 按钮时，就会向 URL `/users` 发送一个请求，从而激活如下所示的路由监听器：
+
+```js
+/* 新用户注册 */
+router.post('/', function (req, res) {
+  if (users[req.params.name]) {
+    res.send('Conflict', 409);
+  } else {
+    users[req.body.username] = req.body;
+    res.redirect('/users')
+  }
+});
+```
+
+监听器函数的第一行检查用户是否已经存在于“数据库”中，如果存在，就会以 409 状态码做出响应，这是向客户端表示发生冲突，同时也会用 `res.send` 显示一个字符串 “Conflict”，这个字符串就是响应主体，而 `res.send` 是由 Express 提供的一个实用工具，允许用字符串进行响应，以及设置响应状态码。
+
+如果没有冲突，就将用户存入“数据库”中，然后，用 `res.redirect` 实用函数将用户重定向到 URL `/users`。
+
+> **[info] 「注意」：**
+>
+> 在这个例子中，姜用户数据存储在内存中，但是在实际的应用程序中，显然想保留这些数据，这意味着要进行异步的 I/O 操作，如果有一个简单通用的键-值对存储模块来访问数据库，那么最后有关路由监听器的代码就应该如下所示：
+>
+> ```js
+> router.post('/', function (req, res, next) {
+>   db.get(req.body.username, function (err, user) {
+>     if (err) {
+>       return next(err);
+>     }
+>     if (user) {
+>       res.send('Conflict', 409);
+>     } else {
+>       db.set(req.body.username, req.body, function (err){
+>         if (err) {
+>           return next(err);
+>         }
+>         res.redirect('/users');
+>       });
+>     }
+>   });
+> });
+
+
+### 使用会话
+
+现在已经有了一个基本的基于 HTTP 的用户管理应用程序（或者是某个应用程序的一部分），这个应用程序可以用多种方法改进。一种方法就是提供某种验证机制和会话管理，允许用户通过用户名和密码进行登录。
+
+首先需要使用 npm 安装这个会话中间件：
+
+```bash
+$ npm install express-session --save
+```
+
+然后在 app.js 文件中设置它：
+
+```js
+var session = require('express-session');
+
+// ...
+
+```
+
+在上面的代码中， 设置了一个带有加密字符串（可以修改）的 cookie 解析器中间件，因为就像前面介绍的那样，由于会话中间件需要用 cookie 来维护会话，所以它需要 cookie 解析器中间件。
+
+此外，还设置了会话中间件，并定义了共享加密字符串和最长会话期，最长会话期定义了在没有用户的 HTTP 活动时，会话能够存在的最长时间。
+
+然后需要创建个会话路由监听器，可以将其存入文件 `routes/session.js` 中，如下所示：
+
+```js
+
+```
+
+在上面的代码块中，我们可以看到这样一段代码：
+
+```js
+```
+
+这是针对视图中传入的传入局部变量的替代方法，不是显式地将参数插入每个 res.render()，而是定义一个动态辅助函数来求每个请求的值，结果就被用作一个局部变量。在上面的这段代码中，对外暴露了会话，它在稍后会为任意的视图模板所使用。
+
+现在可以修改页面布局，并为其创建一个头，这个头会显示用户的登录状态。为此，要在 `views/session/user.jade` 下新建一个文件，如下所示：
+
+```jade
+
+```
+
+这部分代码会用两种模式进行显示：会话中有用户以及会话中没有用户。在第一种情况下，会显示一些用户数据和一个按钮来结束会话。在后一种情况下，会显示一个链接让用户登录。
+
+现在需要将上面这部分代码包含进文件 `views/layout.jade`, 如下所示：
+
+```jade
+```
+
+> **[info] 注意**
+>
+> 注意：在 Jade 中，分配给标记的内容可以是 HTML 编码的，也可以不是。如果想分配一个字符串，使其能够正确地在浏览器中显示（甚至是HTML特定的字符，例如 `<and>`), 就要使用 `=` 操作符， 它将会对这些特殊字符进行编码。
+>
+> ```jade
+> span= session.user.name
+> ```
+> 如果内容中包含 HTML, 并希望将 HTML 显示为一个标记（正如本例中所包含的那部分代码的结果），就应该使用 `!=`：
+>
+> ```jade
+> header!= partical('session/user')
+> ```
+
+如果单击链接，就会激活如下所示路由：
+
+```js
+
+```
+
+这个路由只是显示模板文件 `views/session/new.jade`，这个模板文件是一个登录表单，如下所示：
+
+```jade
+```
+
+这个表单会将数据提交给URL `/session`， 从而激活如下所示的路由：
+
+```js
+```
+
+上面这个路由监听器会根据模拟的用户数据库检查用户名和密码，如果匹配，就将用户对象存入会话，然后将用户重定向到 URL `/users`。
+
+当用户登录成功，页头会显示用户名和一个用于退出登录的按钮，这个按钮会向 URL `/session` 发出一个 DELETE 请求（再次提醒，可以使用方法重载中间件），从而激活如下所示的路由：
+
+```js
+```
+
+上面这个路由监听器只是销毁会话，并重定向到URL `/users`。
+
+下一步，要向 app.js 增加这些新路由的初始化代码，为此，要在 app.js 中的路由部分增加如下所示的一行：
+
+```js
+app.use('/', session);
+```
+
+现在可以登录了，但是模拟数据库中还没有一个用户拥有密码，可以为这些用户添加密码，并重启应用程序。
+
+为了添加密码， 需要修改 `data/users.json` 文件中每个用户的记录， 如下所示：
+
+```js
+```
+
+此外，还需要在签名表单(`views/users/new.jade`)中增加一个密码域，如下所示：
+
+```jade
+h1 New User
+
+form(method='POST', action='/users')
+  p
+    label(for='username') Username <br/>
+    input#username(name='username')
+  p
+    label(for='name') Name <br/>
+    input#name(name='name')
+  p
+    label(for='password') Password <br/>
+    input#password(type='password', name='password')
+  p
+    label(for='bio') Bio <br/>
+    textarea#bio(name='bio')
+  p
+    input(type='submit', value='Create')
+
+```
+
+现在可以创建一个拥有密码的用户来进行登录和退出登录。
+
+现在应该将用户访问重定向到一些路由，例如，用户应该只能在登录成功后才能创建其简介，它也只能删除自己的简介。为此，要用到一个新的中间件：路由中间件。
